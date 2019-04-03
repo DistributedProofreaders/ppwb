@@ -18,7 +18,7 @@ programs that may be used to analyze each format:</p>
 
 <p>Two additional programs are provided here. One converts “straight” quotes in
 a text file into smart or “curly” quotes. The other program is used to compare two
-text files. Follow these links for details and to access the programs:</p>
+files. Follow these links for details and to access the programs:</p>
 
 <ul>
 	<li><a href='./ppsmq.php'>ppsmq</a> to convert straight quotes to curly quotes</li>
