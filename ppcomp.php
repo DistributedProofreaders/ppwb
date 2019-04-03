@@ -12,7 +12,8 @@ echo <<<MENU
 post-processing to compare the concatenated text file downloaded from DP at
 the start of PPing to the final text file at the end of PPing before it is
 uploaded to Project Gutenberg. The user uploads a zip file containing exactly two
-text files to compare, clicks Submit, waits for the test to run and then downloads
+files to compare. Each file can be text or HTML.
+The user then clicks Submit, waits for the test to run and then downloads
 or views the results file. Filenames should have no spaces in them, nor should there
 be any other files or directories/folders in the zip file.</p>
 

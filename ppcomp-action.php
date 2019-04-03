@@ -155,13 +155,6 @@ if ( count($tfiles) + count($hfiles) != 2 ) {
     exit(1);
 }
 
-// 02-Apr-2019
-// comp_pp.py crashes if one file is HTML
-if ( count($tfiles) != 2 ) {
-    print_r("zip does not contain two text files to compare");
-    exit(1);
-}
-
 if ( count($tfiles) == 1 and count($hfiles) == 1 ) {
     // one of each
     $f1 = $tfiles[0];

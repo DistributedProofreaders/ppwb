@@ -22,7 +22,7 @@ text files. Follow these links for details and to access the programs:</p>
 
 <ul>
 	<li><a href='./ppsmq.php'>ppsmq</a> to convert straight quotes to curly quotes</li>
-	<li><a href='./ppcomp.php'>ppcomp</a> to compare two text files</li>
+	<li><a href='./ppcomp.php'>ppcomp</a> to compare two files, text or HTML mixed</li>
 </ul>
 
 <p>
