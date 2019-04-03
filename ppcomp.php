@@ -33,6 +33,11 @@ the results.</p>
 <div style='margin-top:1em; margin-bottom:0em;'><input type="submit" value="Submit" name="upload"/></div>
 </form>
 
+<p>Note: The ppcomp program program was originally written as the standalone program comp_pp.py
+by bibimbop at pgdp. It is used as part of the DP Workbench with permission.
+Users who want a compare tool with many more options might find
+the <a href='https://pptools.tangledhelix.com'>tangledhelix</a> site useful.
+</p>
 MENU;
 }
 
