@@ -1,0 +1,66 @@
+body,html {
+  	font-family: Georgia, Times New Roman, Times, serif;
+  	background-color:#FFFFFF;
+}
+
+@font-face { font-family: cutenotes; src: url('fonts/TravelingTypewriter.ttf'); }
+
+.hsty {
+	font-size:150%;
+	text-align:center;
+	margin: 0 auto;
+	font-family: cutenotes;
+}
+
+body {
+	min-width:500px;
+	max-width:700px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+table.ixp {
+	margin: 0 auto;
+}
+
+table.ixp, .ixp td {
+	border: 1px solid orange;
+	border-collapse: collapse;
+	padding: 5px 10px;
+}
+
+h1, h2, h3, h4, h5, h6 { font-family: Helvetica, Arial, sans-serif }
+
+h1 {
+	font-size:90%;
+	text-align: center;
+	background-color: #c0d0e0;
+	margin: 15px auto;
+}
+
+h2 {
+	font-size:90%;
+	text-align: left;
+	color: black;
+	background-color: #c8d8e8;
+}
+
+hr.thin {
+	border:none; border-bottom:1px solid silver;
+}
+
+p.emph {
+	background-color:#FFFFCC;
+}
+
+ul.circle {
+ list-style-type: circle;
+ list-style-position: outside;
+ list-style-image: none;
+}
+
+ul.none {
+ list-style-type: none;
+ list-style-position: outside;
+ list-style-image: none;
+}
