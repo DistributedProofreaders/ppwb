@@ -263,7 +263,9 @@ if ($gtarget_name != "") {
 // build the command
 $scommand = './bin/pptext ' . $useropts . $gw . ' -i ' . $target_name . ' -o ' . $work . "/" . $upid;
 $command = escapeshellcmd($scommand) . " 2>&1";
+
 // echo $command;
+file_put_contents("${work}/${upid}/command.txt", $command);
 
 // and finally, run pptext
 $output = shell_exec($command);

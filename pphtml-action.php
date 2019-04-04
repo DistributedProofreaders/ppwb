@@ -155,7 +155,9 @@ if ($user_htmlfile == "") {
 $scommand = './bin/pphtml -i ' . $user_htmlfile . ' -o ' . $work . "/" . $upid . "/report.html";
 
 $command = escapeshellcmd($scommand) . " 2>&1";
+
 // echo $command;
+file_put_contents("${work}/${upid}/command.txt", $command);
 
 // and finally, run pphtml
 $output = shell_exec($command);

@@ -84,7 +84,11 @@ if (isset($_FILES['userfile1']) && $_FILES['userfile1']['name'] != "") {
     // move the uploaded file to the project folder
     $target_name1 = $work . "/" . $upid . "/" . $file_name;
     rename($tfilename1, $target_name1);
+} else {
+  echo "missing filename 1";
+  exit(1);
 }
+
 
 // ----- process the second file ---------------------------------
 
@@ -135,6 +139,9 @@ if (isset($_FILES['userfile2']) && $_FILES['userfile2']['name'] != "") {
     // move the uploaded file to the project folder
     $target_name2 = $work . "/" . $upid . "/" . $file_name;
     rename($tfilename2, $target_name2);
+} else {
+  echo "missing filename 2";
+  exit(1);
 }
 
 // ----- process user options ---------------------------------------
@@ -192,7 +199,7 @@ if(isset($_POST['without-html-header'])){
 }
 
 if(isset($_POST['bold-replace'])){
-    $options = $options . " --css-bold #";
+    $options = $options . " --css-bold =";
 }
 
 if(isset($_POST['txt-cleanup-type'])){
@@ -234,7 +241,10 @@ file_put_contents($work . "/access.log", $s, FILE_APPEND);
 
 $scommand = 'PYTHONIOENCODING=utf-8:surrogateescape /home/rfrank/env/bin/python3 ./bin/comp_pp.py ' . $options . " " . $target_name1 . " " . $target_name2;
 $command = escapeshellcmd($scommand) . " > " . $work . "/" . $upid . "/result.html 2>&1";
-// print_r($command);
+
+// echo $command;
+file_put_contents("${work}/${upid}/command.txt", $command);
+
 $output = shell_exec($command);
 
 // ----- display results -------------------------------------------
