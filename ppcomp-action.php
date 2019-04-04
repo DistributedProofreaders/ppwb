@@ -22,49 +22,47 @@ function getUserIP()
 $errors = array(); // place to save error messages
 $work = "t"; // a working folder for project data
 $upid = uniqid('r'); // unique project id
-$extensions = array( // allowed file extensions
-    "zip"
-);
-$target_name = "";
-$gtarget_name = "";
+$options = "";  // user-requested options
+
+// in directory /tmp
+$tfilename1 = "/tmp/" . $upid . "-1";
+$tfilename2 = "/tmp/" . $upid . "-2";
+
+// in project folder
+$target_name1 = "";
+$target_name2 = "";
 
 // create a unique workbench project folder in t
 mkdir($work . "/" . $upid, 0755);
 
+// ----- process the first file ---------------------------------
 
-// ----- process the main project file ---------------------------------
-
-if (isset($_FILES['userfile']) && $_FILES['userfile']['name'] != "") {
+if (isset($_FILES['userfile1']) && $_FILES['userfile1']['name'] != "") {
 
     // get the information about the file
-    $file_name = $_FILES['userfile']['name'];
-    $file_size = $_FILES['userfile']['size'];
-    $file_tmp = $_FILES['userfile']['tmp_name'];
-    $file_type = $_FILES['userfile']['type'];
+    $file_name = $_FILES['userfile1']['name'];
+    $file_size = $_FILES['userfile1']['size'];
+    $file_tmp = $_FILES['userfile1']['tmp_name'];
+    $file_type = $_FILES['userfile1']['type'];
     $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
-    move_uploaded_file($file_tmp, "/tmp/" . $upid);
+    move_uploaded_file($file_tmp, $tfilename1);
 
     // begin a series of validation tests
 
     // does it pass the anti-virus tests?
     $av_test_result = array();
     $av_retval = 0;
-    $cmd = "/usr/bin/clamdscan " . escapeshellcmd("/tmp/" . $upid);
+    $cmd = "/usr/bin/clamdscan " . escapeshellcmd($tfilename1);
     exec($cmd, $av_test_result, $av_retval);
     if ($av_retval == 1) {
-        $errors[] = "input file rejected by clamdscan";
+        $errors[] = "input file 1 rejected by clamdscan";
         // destroy uploaded file
-        unlink( escapeshellcmd("/tmp/" . $upid) );
+        unlink( escapeshellcmd($tfilename1) );
     }
 
     // was a file uploaded?
-    if ($_FILES['userfile']['size'] == 0) {
+    if ($_FILES['userfile1']['size'] == 0) {
         $errors[] = 'no file was uploaded';
-    }
-
-    // do they claim it's an allowed type?
-    if (in_array($file_ext, $extensions) === false) {
-        $errors[] = "please upload a .zip file";
     }
 
     // is it small enough?
@@ -84,10 +82,119 @@ if (isset($_FILES['userfile']) && $_FILES['userfile']['name'] != "") {
     }
 
     // move the uploaded file to the project folder
-    $target_name = $work . "/" . $upid . "/" . $file_name;
-    rename("/tmp/" . $upid, $target_name);
+    $target_name1 = $work . "/" . $upid . "/" . $file_name;
+    rename($tfilename1, $target_name1);
 }
-  
+
+// ----- process the second file ---------------------------------
+
+if (isset($_FILES['userfile2']) && $_FILES['userfile2']['name'] != "") {
+
+    // get the information about the file
+    $file_name = $_FILES['userfile2']['name'];
+    $file_size = $_FILES['userfile2']['size'];
+    $file_tmp = $_FILES['userfile2']['tmp_name'];
+    $file_type = $_FILES['userfile2']['type'];
+    $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
+    move_uploaded_file($file_tmp, $tfilename2);
+
+    // begin a series of validation tests
+
+    // does it pass the anti-virus tests?
+    $av_test_result = array();
+    $av_retval = 0;
+    $cmd = "/usr/bin/clamdscan " . escapeshellcmd($tfilename2);
+    exec($cmd, $av_test_result, $av_retval);
+    if ($av_retval == 1) {
+        $errors[] = "input file 2 rejected by clamdscan";
+        // destroy uploaded file
+        unlink( escapeshellcmd($tfilename2) );
+    }
+
+    // was a file uploaded?
+    if ($_FILES['userfile2']['size'] == 0) {
+        $errors[] = 'no file was uploaded';
+    }
+
+    // is it small enough?
+    if ($file_size > 31457280) {
+        $errors[] = "file size must be less than 30 MB";
+    }
+
+    // if any errors, report and terminate
+    if (empty($errors) == false) {
+        echo "<pre>";
+        echo "process terminated during processing uploaded file:<br/>";
+        foreach ($errors as $key => $value) {
+            echo $value . "<br/>";
+        }
+        echo "</pre>";
+        exit(1);
+    }
+
+    // move the uploaded file to the project folder
+    $target_name2 = $work . "/" . $upid . "/" . $file_name;
+    rename($tfilename2, $target_name2);
+}
+
+// ----- process user options ---------------------------------------
+
+if(isset($_POST['ignore-format'])){
+    $options = $options . " --" . "ignore-format";
+}
+ 
+if(isset($_POST['suppress-footnote-tags'])){
+    $options = $options . " --" . "suppress-footnote-tags";
+}
+
+if(isset($_POST['suppress-illustration-tags'])){
+    $options = $options . " --" . "suppress-illustration-tags";
+}
+
+if(isset($_POST['ignore-case'])){
+    $options = $options . " --" . "ignore-case";
+}
+
+if(isset($_POST['extract-footnotes'])){
+    $options = $options . " --" . "extract-footnotes";
+}
+
+if(isset($_POST['ignore-0-space'])){
+    $options = $options . " --" . "ignore-0-space";
+}
+
+if(isset($_POST['suppress-nbsp-num'])){
+    $options = $options . " --" . "suppress-nbsp-num";
+}
+
+if(isset($_POST['suppress-proofers-notes'])){
+    $options = $options . " --" . "suppress-proofers-notes";
+}
+
+if(isset($_POST['regroup-split-words'])){
+    $options = $options . " --" . "regroup-split-words";
+}
+
+if(isset($_POST['css-greek-title-plus'])){
+    $options = $options . " --" . "css-greek-title-plus";
+}
+
+if(isset($_POST['css-add-illustration'])){
+    $options = $options . " --" . "css-add-illustration";
+}
+
+if(isset($_POST['css-no-default'])){
+    $options = $options . " --" . "css-no-default";
+}
+
+if(isset($_POST['without-html-header'])){
+    $options = $options . " --" . "without-html-header";
+}
+
+if(isset($_POST['txt-cleanup-type'])){
+    $options = $options . " --" . "txt-cleanup-type" . " " . $_POST['txt-cleanup-type'];
+}
+
 // ----- no errors. proceed ----------------------------------------
 
 // make a record of this attempted run ---
@@ -116,67 +223,14 @@ $city = $api_result['city'];
 $country = $api_result['country_name'];
 
 $messagegeo = " [" . $city . ", " . $country . "]";
-$s = $date . " " . "pphtml" . " " . $upid . " " . $ip . $messagegeo . "\n";
+$s = $date . " " . "ppcomp" . " " . $upid . " " . $ip . $messagegeo . "\n";
 file_put_contents($work . "/access.log", $s, FILE_APPEND);
-
-// ----- burst the zip file --------------------------------------------
-
-$zipArchive = new ZipArchive();
-$result = $zipArchive->open($target_name);
-if ($result === TRUE) {
-    $zipArchive->extractTo($work . "/" . $upid);
-    $zipArchive->close();
-}
-else {
-    print_r("unable to unzip uploaded file");
-    exit(1);
-}
-
-$tfiles = array(); // all text files in the zip
-$hfiles = array(); // all the HTML files in the zip
-
-// there should be exactly two files, text and HTML mixed is ok
-
-// create list of filenames of text and HTML files in zip
-foreach(glob($work . "/" . $upid . "/*.txt") as $filename) {
-    array_push($tfiles, $filename);
-}
-
-foreach(glob($work . "/" . $upid . "/*.htm") as $filename) {
-    array_push($hfiles, $filename);
-}
-
-foreach(glob($work . "/" . $upid . "/*.html") as $filename) {
-    array_push($hfiles, $filename);
-}
-
-if ( count($tfiles) + count($hfiles) != 2 ) {
-    print_r("zip does not contain exactly two files to compare");
-    exit(1);
-}
-
-if ( count($tfiles) == 1 and count($hfiles) == 1 ) {
-    // one of each
-    $f1 = $tfiles[0];
-    $f2 = $hfiles[0];
-}
-
-if ( count($tfiles) == 2 and count($hfiles) == 0 ) {
-    // both text 
-    $f1 = $tfiles[0];
-    $f2 = $tfiles[1];
-}
-
-if ( count($tfiles) == 0 and count($hfiles) == 2 ) {
-    // both HTML
-    $f1 = $hfiles[0];
-    $f2 = $hfiles[1];
-}
 
 // ----- run the ppcomp command ----------------------------------------
 
-$scommand = 'PYTHONIOENCODING=utf-8:surrogateescape /home/rfrank/env/bin/python3 ./bin/comp_pp.py ' . $f1 . " " . $f2;
+$scommand = 'PYTHONIOENCODING=utf-8:surrogateescape /home/rfrank/env/bin/python3 ./bin/comp_pp.py ' . $options . " " . $target_name1 . " " . $target_name2;
 $command = escapeshellcmd($scommand) . " > " . $work . "/" . $upid . "/result.html 2>&1";
+print_r($command);
 $output = shell_exec($command);
 
 // ----- display results -------------------------------------------
