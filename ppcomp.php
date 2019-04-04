@@ -44,9 +44,11 @@ or views the results file.</p>
 <input type="checkbox" name="ignore-0-space" value="No" id="ignore-0-space" autocomplete="off">
 <label for="ignore-0-space">suppress zero width space (U+200b)</label><br/>
 
+<!--
 <input type="checkbox" name="bold-replace" value="No" id="bold-replace" autocomplete="off">
 <label for="bold-replace">replace &lt;b>&lt;/b> markup with "="</label><br/>
 <br />
+-->
 
 <div>Options for transforming a text file:</div>
 

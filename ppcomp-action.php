@@ -198,9 +198,9 @@ if(isset($_POST['without-html-header'])){
     $options = $options . " --" . "without-html-header";
 }
 
-if(isset($_POST['bold-replace'])){
-    $options = $options . " --css-bold =";
-}
+// if(isset($_POST['bold-replace'])){
+//    $options = $options . " --css-bold =";
+// }
 
 if(isset($_POST['txt-cleanup-type'])){
     $options = $options . " --" . "txt-cleanup-type" . " " . $_POST['txt-cleanup-type'];
