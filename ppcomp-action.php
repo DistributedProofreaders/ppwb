@@ -191,6 +191,10 @@ if(isset($_POST['without-html-header'])){
     $options = $options . " --" . "without-html-header";
 }
 
+if(isset($_POST['bold-replace'])){
+    $options = $options . " --css-bold #";
+}
+
 if(isset($_POST['txt-cleanup-type'])){
     $options = $options . " --" . "txt-cleanup-type" . " " . $_POST['txt-cleanup-type'];
 }
@@ -230,7 +234,7 @@ file_put_contents($work . "/access.log", $s, FILE_APPEND);
 
 $scommand = 'PYTHONIOENCODING=utf-8:surrogateescape /home/rfrank/env/bin/python3 ./bin/comp_pp.py ' . $options . " " . $target_name1 . " " . $target_name2;
 $command = escapeshellcmd($scommand) . " > " . $work . "/" . $upid . "/result.html 2>&1";
-print_r($command);
+// print_r($command);
 $output = shell_exec($command);
 
 // ----- display results -------------------------------------------

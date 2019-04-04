@@ -16,7 +16,7 @@ files to compare. Each file can be text or HTML.
 The user then clicks Submit, waits for the test to run and then downloads
 or views the results file.</p>
 
-<form target="_blank" action="ppcomp2-action.php" method="POST" enctype="multipart/form-data">
+<form target="_blank" action="ppcomp-action.php" method="POST" enctype="multipart/form-data">
 
 <div>Select options:</div><br />
 
@@ -61,6 +61,9 @@ or views the results file.</p>
 
 <input type="checkbox" name="without-html-header" value="No" id="without-html-header" autocomplete="off">
 <label for="without-html-header">HTML: do not output html header and footer</label><br/>
+
+<input type="checkbox" name="bold-replace" value="No" id="bold-replace" autocomplete="off">
+<label for="bold-replace">HTML: replace &lt;b>&lt;/b> markup with "="</label><br/>
 
 <br />
 <div>TXT: Type of text cleaning:</div>
