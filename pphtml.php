@@ -60,8 +60,6 @@ function output_footer()
         	<a style='font-size:70%' href='index.php'>MAIN PAGE</a>
         	&nbsp;|&nbsp;
         	<a style='font-size:70%' href='techinfo-pphtml.php'>TECH INFO</a>
-          &nbsp;|&nbsp;
-          <a style='font-size:70%' href='history-pphtml.php'>HISTORY</a>       
         </td>
         <td align="right">
         <a style='font-size:70%' href='mailto:rfrank@rfrank.net'>CONTACT</a></td>
