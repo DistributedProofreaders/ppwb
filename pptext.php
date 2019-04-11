@@ -24,7 +24,9 @@ related program, <a href='pphtml.php'>pphtml</a>, checks the HTML version.
 The text file is the book you want to check. 
 You may also drag and drop a "good words" file onto the second "Browse" button if you choose.
 Choose one or more languages and any options you want. Then click "Submit" and wait
-about 30 seconds. Even compiled, a tremendous amount of processing has to get done. When it's
+about 30 seconds. Even compiled, a tremendous amount of processing has to get done. 
+Very large text files (roughly 1 meg) could take up to 15 minutes.
+When it's
 finished you should see a screen announcing "Pptext Results" with a link to the results
 of the run. If the Smart Quote Check generated a report, a link to that report will also
 be provided on the Results page.
