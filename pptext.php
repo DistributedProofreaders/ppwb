@@ -78,6 +78,9 @@ Left click to view or right click the link to download the results.</p>
 
 </form>
 MENU;
+$command = escapeshellcmd('bin/pptext -r');
+$output = shell_exec($command);
+echo "<div style='text-align:right; font-size:70%; color:white;'>pptext version: ".$output."</div>";
 }
 
 function output_header()
