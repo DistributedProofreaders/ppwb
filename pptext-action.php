@@ -195,13 +195,13 @@ if ($target_name != "") {
 // good words file
 if ($gtarget_name != "") {
     $cmd = "file '${gtarget_name}'";
-    exec($cmd, $ppf_output, $ppf_exitcode);
-    $pos = strpos($ppf_output[0], "ISO-8859");
+    exec($cmd, $ppf_outputg, $ppf_exitcodeg);
+    $pos = strpos($ppf_outputg[0], "ISO-8859");
     if ($pos !== false) {
         // Latin-1. convert to UTF-8
         $tmpfname = "/tmp/trash01.txt";
         $cmd = "iconv -f ISO_8859-1 -t UTF-8 -o '${tmpfname}' '${gtarget_name}'";
-        exec($cmd, $ppf_output, $ppf_exitcode);
+        exec($cmd, $ppf_outputg, $ppf_exitcodeg);
         rename($tmpfname, $gtarget_name);
         file_put_contents("${work}/${upid}/converted-gwf.txt", "good words file converted from ISO-8859");
     }
