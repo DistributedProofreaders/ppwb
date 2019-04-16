@@ -68,8 +68,8 @@ if (isset($_FILES['userfile']) && $_FILES['userfile']['name'] != "") {
     }
 
     // is it small enough?
-    if ($file_size > 31457280) {
-        $errors[] = "file size must be less than 30 MB";
+    if ($file_size > 40000000) {
+        $errors[] = "file size must be less than 40 MB";
     }
 
     // if any errors, report and terminate
@@ -152,7 +152,8 @@ if ($user_htmlfile == "") {
 
 // build the command
 // $scommand = './pphtml -i ' . $target_name . ' -o ' . $work . "/" . $upid; // orthogonal
-$scommand = './bin/pphtml -i ' . $user_htmlfile . ' -o ' . $work . "/" . $upid . "/report.html";
+// $scommand = './bin/pphtml -i ' . $user_htmlfile . ' -o ' . $work . "/" . $upid . "/report.html";
+$scommand = 'python3 ./bin/pphtml.py -i ' . $user_htmlfile . ' -o ' . $work . "/" . $upid . "/report.html";
 
 $command = escapeshellcmd($scommand) . " 2>&1";
 
