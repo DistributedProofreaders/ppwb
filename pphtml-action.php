@@ -153,7 +153,7 @@ if ($user_htmlfile == "") {
 // build the command
 // $scommand = './pphtml -i ' . $target_name . ' -o ' . $work . "/" . $upid; // orthogonal
 // $scommand = './bin/pphtml -i ' . $user_htmlfile . ' -o ' . $work . "/" . $upid . "/report.html";
-$scommand = 'python3 ./bin/pphtml.py -i ' . $user_htmlfile . ' -o ' . $work . "/" . $upid . "/report.html";
+$scommand = 'python3 ./bin/pphtml.py -i "' . $user_htmlfile . '" -o ' . $work . "/" . $upid . "/report.html";
 
 $command = escapeshellcmd($scommand) . " 2>&1";
 
