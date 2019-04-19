@@ -18,6 +18,8 @@ related program, <a href='pphtml.php'>pphtml</a>, checks the HTML version.
 <li>for punctuation checks, curly quotes are required</li>
 <li>punctuation style is American (double-quotes used for quotations)</li>
 <li>if there is a good words text file, it can be any legal filename</li>
+<li>for very large files, it is suggested to check "skip time-expensive checks"
+and perhaps also "skip edit distance checks" to significantly reduce run time. 
 </ol>
 
 <p>To use this program, drag and drop a text file onto the top "Browse" button below.
@@ -72,7 +74,10 @@ Left click to view or right click the link to download the results.</p>
     <label for="sqc">skip edit-distance check</label><br/>
 
     <input type="checkbox" name="ver" value="Yes" id="ver" autocomplete="off">
-    <label for="ver">verbose operation</label>
+    <label for="ver">verbose operation</label><br/>
+
+    <input type="checkbox" name="skipx" value="Yes" id="skipx" autocomplete="off">
+    <label for="sqc">skip time-expensive checks</label><br/>
 
     <div style='margin-top:1em; margin-bottom:0em;'><input type="submit" value="Submit" name="upload"/></div>
 

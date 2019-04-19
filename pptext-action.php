@@ -250,18 +250,24 @@ if(isset($_POST['ver']) && $_POST['ver'] == 'Yes') {
     $ver = " -v ";
 }
 
-$useropts = $wlang . $nrs . $sqc . $lev . $ver;
+// see if user has checked the "skip expensive tests" box
+$skipx = "";
+if(isset($_POST['skipx']) && $_POST['skipx'] == 'Yes') {
+    $skipx = " -x ";
+} 
+
+$useropts = $wlang . $nrs . $sqc . $lev . $ver . $skipx;
 
 // include good words file if present
 $gw = "";
 if ($gtarget_name != "") {
-    $gw = " -g " . $gtarget_name . " ";
+    $gw = " -g \"" . $gtarget_name . "\" ";
 }
 
 // ----- run the pptext command ----------------------------------------
 
 // build the command
-$scommand = './bin/pptext ' . $useropts . $gw . ' -i ' . $target_name . ' -o ' . $work . "/" . $upid;
+$scommand = './bin/pptext ' . $useropts . $gw . ' -i "' . $target_name . '" -o ' . $work . "/" . $upid;
 $command = escapeshellcmd($scommand) . " 2>&1";
 
 // echo $command;
