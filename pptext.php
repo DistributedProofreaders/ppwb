@@ -77,7 +77,10 @@ Left click to view or right click the link to download the results.</p>
     <label for="ver">verbose operation</label><br/>
 
     <input type="checkbox" name="skipx" value="Yes" id="skipx" autocomplete="off">
-    <label for="sqc">skip time-expensive checks</label><br/>
+    <label for="skipx">skip time-expensive checks</label><br/>
+
+    <input type="checkbox" name="skipspell" value="Yes" id="skipspell" autocomplete="off">
+    <label for="skipspell">skip spellcheck</label><br/>
 
     <div style='margin-top:1em; margin-bottom:0em;'><input type="submit" value="Submit" name="upload"/></div>
 

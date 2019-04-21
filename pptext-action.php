@@ -256,7 +256,13 @@ if(isset($_POST['skipx']) && $_POST['skipx'] == 'Yes') {
     $skipx = " -x ";
 } 
 
-$useropts = $wlang . $nrs . $sqc . $lev . $ver . $skipx;
+// see if user has checked the "skip spellcheck" box
+$skipspell = "";
+if(isset($_POST['skipspell']) && $_POST['skipspell'] == 'Yes') {
+    $skipspell = " -s ";
+}
+
+$useropts = $wlang . $nrs . $sqc . $lev . $ver . $skipx . $skipspell;
 
 // include good words file if present
 $gw = "";
