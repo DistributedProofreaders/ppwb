@@ -212,11 +212,21 @@ if ($gtarget_name != "") {
 // get the user's chosen language(s) 
 $wlang = "";
 $nlang = 0;  // number of languages
+$isEnglish = false;
 if(isset($_POST['wlangs'])){
     foreach($_POST['wlangs'] as $alang){
         $wlang = $wlang . "," . $alang;
         $nlang = $nlang + 1;
+        if ($alang == "en" || $alang == "en_GB" || $alang == "en_US" || $alang == "en_CA" ) {
+            $isEnglish = true;
+        }        
     }
+}
+
+// if no "English" language is selected, disable jeebies
+$jflag = "";
+if (!$isEnglish) {
+    $jflag = " -j ";
 }
 
 if ($nlang == 0) {
@@ -262,7 +272,7 @@ if(isset($_POST['skipspell']) && $_POST['skipspell'] == 'Yes') {
     $skipspell = " -s ";
 }
 
-$useropts = $wlang . $nrs . $sqc . $lev . $ver . $skipx . $skipspell;
+$useropts = $wlang . $nrs . $sqc . $lev . $ver . $skipx . $skipspell . $jflag;
 
 // include good words file if present
 $gw = "";
