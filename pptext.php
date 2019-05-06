@@ -76,8 +76,10 @@ Left click to view or right click the link to download the results.</p>
     <input type="checkbox" name="ver" value="Yes" id="ver" autocomplete="off">
     <label for="ver">verbose operation</label><br/>
 
+<!--
     <input type="checkbox" name="skipx" value="Yes" id="skipx" autocomplete="off">
     <label for="skipx">skip time-expensive checks</label><br/>
+-->
 
     <input type="checkbox" name="skipspell" value="Yes" id="skipspell" autocomplete="off">
     <label for="skipspell">skip spellcheck</label><br/>
