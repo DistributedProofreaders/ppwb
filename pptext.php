@@ -18,8 +18,8 @@ related program, <a href='pphtml.php'>pphtml</a>, checks the HTML version.
 <li>for punctuation checks, curly quotes are required</li>
 <li>punctuation style is American (double-quotes used for quotations)</li>
 <li>if there is a good words text file, it can be any legal filename</li>
-<li>for very large files, it is suggested to check "skip time-expensive checks"
-and perhaps also "skip edit distance checks" to significantly reduce run time. 
+<li>for very large files, it is suggested to
+"skip edit distance checks" to significantly reduce run time. 
 </ol>
 
 <p>To use this program, drag and drop a text file onto the top "Browse" button below.
