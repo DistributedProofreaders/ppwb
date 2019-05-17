@@ -23,7 +23,7 @@ $errors = array(); // place to save error messages
 $work = "t"; // a working folder for project data
 $upid = uniqid('r'); // unique project id
 $extensions = array( // allowed file extensions
-    "txt"
+    "txt", "TXT"
 );
 $target_name = "";
 $gtarget_name = "";
