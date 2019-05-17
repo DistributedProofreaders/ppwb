@@ -236,43 +236,40 @@ if ($nlang == 0) {
 $wlang = substr($wlang, 1);  // remove leading comma
 $wlang = " -a " . $wlang . " ";
 
-// see if user has ticked the "skip edit distance" box
-$nrs = "";
-if(isset($_POST['edc']) && $_POST['edc'] == 'Yes') {
-    $nrs = " -l ";  
+// aggregate user-selected tests
+$utests = " -t ";
+if(isset($_POST['rat']) && $_POST['rat'] == 'Yes') {
+  $utests = $utests . "a";
 }
-
-// see if user has ticked the "skip smart quote checks" box
-$sqc = "";
-if(isset($_POST['sqc']) && $_POST['sqc'] == 'Yes') {
-    $sqc = " -q ";  
+if(isset($_POST['rspl']) && $_POST['rspl'] == 'Yes') {
+  $utests = $utests . "s";
 }
-
-// see if user has ticked the "skip edit distance checks" box
-$lev = "";
-if(isset($_POST['lev']) && $_POST['lev'] == 'Yes') {
-    $lev = " -d ";  
-}    
+if(isset($_POST['redi']) && $_POST['redi'] == 'Yes') {
+  $utests = $utests . "e";
+}
+if(isset($_POST['rtxt']) && $_POST['rtxt'] == 'Yes') {
+  $utests = $utests . "t";
+}
+if(isset($_POST['rthc']) && $_POST['rthc'] == 'Yes') {
+  $utests = $utests . "1";
+}
+if(isset($_POST['rhsc']) && $_POST['rhsc'] == 'Yes') {
+  $utests = $utests . "2";
+}
+if(isset($_POST['rjee']) && $_POST['rjee'] == 'Yes') {
+  $utests = $utests . "j";
+}
+if(isset($_POST['rsqc']) && $_POST['rsqc'] == 'Yes') {
+  $utests = $utests . "q";
+}
 
 // see if user has ticked the "verbose" box
-$ver = "";
+$verbose = "";
 if(isset($_POST['ver']) && $_POST['ver'] == 'Yes') {
-    $ver = " -v ";
+    $verbose = " -v ";
 }
 
-// see if user has checked the "skip expensive tests" box
-$skipx = "";
-if(isset($_POST['skipx']) && $_POST['skipx'] == 'Yes') {
-    $skipx = " -x ";
-} 
-
-// see if user has checked the "skip spellcheck" box
-$skipspell = "";
-if(isset($_POST['skipspell']) && $_POST['skipspell'] == 'Yes') {
-    $skipspell = " -s ";
-}
-
-$useropts = $wlang . $nrs . $sqc . $lev . $ver . $skipx . $skipspell . $jflag;
+$useropts = $wlang . $utests . $verbose;
 
 // include good words file if present
 $gw = "";

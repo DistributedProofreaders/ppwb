@@ -19,7 +19,8 @@ related program, <a href='pphtml.php'>pphtml</a>, checks the HTML version.
 <li>punctuation style is American (double-quotes used for quotations)</li>
 <li>if there is a good words text file, it can be any legal filename</li>
 <li>for very large files, it is suggested to
-"skip edit distance checks" to significantly reduce run time. 
+"skip edit distance checks" to significantly reduce run time.</li>
+<li>by default, all tests are run. You can choose to enable or disable individual tests.
 </ol>
 
 <p>To use this program, drag and drop a text file onto the top "Browse" button below.
@@ -62,27 +63,43 @@ Left click to view or right click the link to download the results.</p>
       <td align='right' style='padding-left:30px'>Italian: <input type="checkbox" name="wlangs[]" value="it" autocomplete=off /></td>     
       </tr>
       <tr>
-	  <td align='right' style='padding-left:30px'>Spanish: <input type="checkbox" name="wlangs[]" value="es" autocomplete=off /></td>
+      <td align='right' style='padding-left:30px'>Spanish: <input type="checkbox" name="wlangs[]" value="es" autocomplete=off /></td>
       </tr>
     </table>
     </div>
 
-    <input type="checkbox" name="sqc" value="Yes" id="sqc" autocomplete="off">
-    <label for="sqc">skip smart quote check</label><br/>
+    <br/>
 
-    <input type="checkbox" name="lev" value="Yes" id="lev" autocomplete="off">
-    <label for="sqc">skip edit-distance check</label><br/>
+<div>Select/unselect Tests<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name='rat" value="Yes" id='rat' autocomplete="off" class="chk_boxes">
+    <label for="rat">run all tests</label><br/>
 
+    <hr style='border:none; border-bottom:1px solid silver; width:10%; float:left; margin-left:24px;' /><br />
+
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rspl" value="Yes" id="rspl" autocomplete="off" class="chk_boxes1">
+    <label for="rspl">run spellcheck</label><br/>    
+
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="redi" value="Yes" id="redi" autocomplete="off" class="chk_boxes1">
+    <label for="redi">run edit distance check</label><br/>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rtxt" value="Yes" id="rtxt" autocomplete="off" class="tchk chk_boxes1 chk_t">
+    <label for="rtxt">run text checks</label><br/>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rthc" value="Yes" id="rthc" autocomplete="off" class="tchks chk_boxes1 chk_t1">
+    <label for="rthc">&nbsp;&nbsp;&nbsp;&nbsp;run hyphen consistency</label><br/>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rhsc" value="Yes" id="rhsc" autocomplete="off" class="tchks chk_boxes1 chk_t1">
+    <label for="rhsc">&nbsp;&nbsp;&nbsp;&nbsp;run hyphen-space consistency</label><br/>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rjee" value="Yes" id="rjee" autocomplete="off" class="chk_boxes1">
+    <label for="sqc">run jeebies check</label><br/>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rsqc" value="Yes" id="rsqc" autocomplete="off" class="chk_boxes1">
+    <label for="rsqc">run smart quote check</label><br/>
+
+    <br/>
     <input type="checkbox" name="ver" value="Yes" id="ver" autocomplete="off">
     <label for="ver">verbose operation</label><br/>
-
-<!--
-    <input type="checkbox" name="skipx" value="Yes" id="skipx" autocomplete="off">
-    <label for="skipx">skip time-expensive checks</label><br/>
--->
-
-    <input type="checkbox" name="skipspell" value="Yes" id="skipspell" autocomplete="off">
-    <label for="skipspell">skip spellcheck</label><br/>
 
     <div style='margin-top:1em; margin-bottom:0em;'><input type="submit" value="Submit" name="upload"/></div>
 
@@ -103,10 +120,29 @@ function output_header()
     <meta name=viewport content="width=device-width, initial-scale=1">
     <title>PP Workbench: pptext</title>
     <link rel="stylesheet" type="text/css" href="rfrank.css">
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('.chk_boxes').click(function(){
+            $('.chk_boxes1').prop('checked',this.checked);
+        });
+        $('.chk_t').click(function(){
+            $('.chk_t1').prop('checked',this.checked);
+        });
+        $('.chk_boxes1').click(function(){
+            $('.chk_boxes').prop('checked',false);
+        });
+        $('.tchks').click(function(){
+            $('.tchk').prop('checked',true);
+        });
+        $('.chk_boxes1').prop('checked',true);
+        $('.chk_boxes').prop('checked',true);       
+    });
+    </script>
   </head>
   <body>
   <div id="header" class='hsty'>pptext</div>
-	<hr style='border:none; border-bottom:1px solid silver;'>  
+    <hr style='border:none; border-bottom:1px solid silver;'>  
 HEAD;
 }
 
@@ -118,15 +154,16 @@ function output_footer()
     <table summary="" width="100%">
       <tr>
         <td align="left">
-        	<a style='font-size:70%' href='index.php'>MAIN PAGE</a>
-        	&nbsp;|&nbsp;
-        	<a style='font-size:70%' href='techinfo-pptext.php'>TECH INFO</a>
+            <a style='font-size:70%' href='index.php'>MAIN PAGE</a>
+            &nbsp;|&nbsp;
+            <a style='font-size:70%' href='techinfo-pptext.php'>TECH INFO</a>
         </td>
         <td align="right">
         <a style='font-size:70%' href='mailto:rfrank@rfrank.net'>CONTACT</a></td>
       </tr>
     </table>
   </div>
+
   </body>
 </html>
 FOOT;
