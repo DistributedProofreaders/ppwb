@@ -20,6 +20,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
+# 2019-06-14 rtonsing: changes by rfrank to work on the pp workbench web site,
+# change by me to ignore bold text marking.
+
+# 2019-06-14 rtonsing: add "pageno" to list of page number classes to ignore.
+
+# 2019-08-03 rtonsing: remove transformation of 'abbr' and 'dfn' to '_' italics markup.
+
 import sys
 import os
 import re
@@ -406,8 +413,11 @@ def extract_footnotes_pp(pp_text, fn_regexes):
     return text, footnotes
 
 DEFAULT_TRANSFORM_CSS = '''
-                i:before, cite:before, em:before, abbr:before, dfn:before,
-                i:after, cite:after, em:after, abbr:after, dfn:after      { content: "_"; }
+                i:before, cite:before, em:before,
+                i:after, cite:after, em:after      { content: "_"; }
+
+                b:before, bold:before,
+                b:after, bold:after         { content: "="; }
 
                 /* line breaks with <br /> will be ignored by
                  *  normalize-space(). Add a space in all of them to work
@@ -415,15 +425,18 @@ DEFAULT_TRANSFORM_CSS = '''
                 br:before { content: " "; }
 
                 /* Add spaces around td tags. */
-                td:after, td:after { content: " "; }
+                td:before, td:after { content: " "; }
 
                 /* Remove page numbers. It seems every PP has a different way. */
                 span[class^="pagenum"] { display: none }
                 p[class^="pagenum"] { display: none }
+                div[class^="pagenum"] { display: none }
+                span[class^="pageno"] { display: none }
+                p[class^="pageno"] { display: none }
+                div[class^="pageno"] { display: none }
                 p[class^="page"] { display: none }
                 span[class^="pgnum"] { display: none }
                 div[id^="Page_"] { display: none }
-                div[class^="pagenum"] { display: none }
             '''
 
 def clear_element(element):
@@ -544,9 +557,13 @@ class pgdp_file_text(pgdp_file):
             if self.args.ignore_format:
                 self.text = self.text.replace("<i>", "")
                 self.text = self.text.replace("</i>", "")
+                self.text = self.text.replace("<b>", "")
+                self.text = self.text.replace("</b>", "")
             else:
                 self.text = self.text.replace("<i>", "_")
                 self.text = self.text.replace("</i>", "_")
+                self.text = self.text.replace("<b>", "=")
+                self.text = self.text.replace("</b>", "=")
 
             self.text = re.sub("<.*?>", '', self.text)
             self.text = re.sub("</.*?>", '', self.text)
@@ -563,6 +580,7 @@ class pgdp_file_text(pgdp_file):
         else:
             if self.args.ignore_format:
                 self.text = self.text.replace("_", "")
+                self.text = self.text.replace("=", "")
 
             # Horizontal separation
             self.text = self.text.replace("*       *       *       *       *", "")
@@ -708,6 +726,8 @@ class pgdp_file_html(pgdp_file):
         # --css can be present multiple times, so it's a list.
         for css in self.args.css:
             self.mycss += css
+
+        #print(self.mycss) ###
 
 
     def analyze(self):

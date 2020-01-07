@@ -23,7 +23,7 @@ class Ppsmq(object):
         self.encoding = ""
         self.FLAG = "@"
         self.flag_count = 0
-        self.VERSION = "2018.03.22"
+        self.VERSION = "2019.10.04"
         self.root = os.path.dirname(os.path.realpath(__file__))
 
     # display (fatal) error and exit
@@ -47,6 +47,27 @@ class Ppsmq(object):
             print(e)
             self.fatal("loadFile: cannot open source file {}".format(fn))
         self.wb = [s.rstrip() for s in self.wb]
+        
+        WRAP = False
+        if WRAP:
+            # if any tags span two or more lines, unwrap them and leave blank lines
+            # so the line counter stays correct
+            # for ppsmq, need to be able to restore the lines and indentation
+            i = 0
+            while (i < len(self.wb)):
+                try:
+                    lbc = self.wb[i].count('<')
+                    rbc = self.wb[i].count('>')
+                    consume = 1
+                    while lbc != rbc:
+                        self.wb[i] = self.wb[i]+"⦻"+self.wb[i+consume]
+                        self.wb[i+consume] = ""
+                        lbc = self.wb[i].count('<')
+                        rbc = self.wb[i].count('>')
+                        consume += 1
+                except:
+                    pass
+                i += 1       
 
     # save working buffer to specified dstfile
     def saveFile(self, fn):
@@ -55,6 +76,17 @@ class Ppsmq(object):
             del self.wb[-1]
         f1 = open(fn, "w", encoding="UTF-8")
         f1.write('\ufeff')  # BOM if UTF-8
+        
+        WRAP = False
+        if WRAP:        
+            for index, t in enumerate(self.wb):
+                if '⦻' in t:
+                    t2 = t.split('⦻')
+                    j = index
+                    for line in t2:
+                        self.wb[j] = line
+                        j += 1
+        
         for index, t in enumerate(self.wb):
             f1.write("{:s}\r\n".format(t))
         f1.close()

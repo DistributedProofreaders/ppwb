@@ -15,6 +15,10 @@ function deleteDir($dirPath) {
         $dirPath .= '/';
     }
     $files = glob($dirPath . '*', GLOB_MARK);
+    $fn = $dirPath . "images/.DS_Store";
+    if (file_exists($fn)) {
+        unlink $fn;
+    }
     foreach ($files as $file) {
         if (is_dir($file)) {
             deleteDir($file);
