@@ -1,8 +1,8 @@
 <?php
+require_once("base.inc");
 
-output_header();
+output_header("pptext", ["techinfo-pptext.php" => "TECH INFO"], get_js());
 output_content();
-output_footer();
 
 function output_content()
 {
@@ -110,18 +110,9 @@ $output = shell_exec($command);
 echo "<div style='text-align:right; font-size:70%; color:white;'>pptext version: ".$output."</div>";
 }
 
-function output_header()
+function get_js()
 {
-    echo <<<HEAD
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name=viewport content="width=device-width, initial-scale=1">
-    <title>PP Workbench: pptext</title>
-    <link rel="stylesheet" type="text/css" href="rfrank.css">
-    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script>
+    return <<<JS
     $(document).ready(function() {
         $('.chk_boxes').click(function(){
             $('.chk_boxes1').prop('checked',this.checked);
@@ -138,33 +129,6 @@ function output_header()
         $('.chk_boxes1').prop('checked',true);
         $('.chk_boxes').prop('checked',true);       
     });
-    </script>
-  </head>
-  <body>
-  <div id="header" class='hsty'>pptext</div>
-    <hr style='border:none; border-bottom:1px solid silver;'>  
-HEAD;
+JS;
 }
 
-function output_footer()
-{
-  echo <<<FOOT
-  <div id="footer">
-    <hr style='border:none; border-bottom:1px solid silver;'>
-    <table summary="" width="100%">
-      <tr>
-        <td align="left">
-            <a style='font-size:70%' href='index.php'>MAIN PAGE</a>
-            &nbsp;|&nbsp;
-            <a style='font-size:70%' href='techinfo-pptext.php'>TECH INFO</a>
-        </td>
-        <td align="right">
-        <a style='font-size:70%' href='mailto:rfrank@rfrank.net'>CONTACT</a></td>
-      </tr>
-    </table>
-  </div>
-
-  </body>
-</html>
-FOOT;
-}

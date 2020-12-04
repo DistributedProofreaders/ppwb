@@ -1,8 +1,8 @@
 <?php
+require_once("base.inc");
 
-output_header();
+output_header("pphtml", ["techinfo-pphtml.php" => "TECH INFO"]);
 output_content();
-output_footer();
 
 function output_content()
 {
@@ -32,41 +32,3 @@ of the run. Left click to view or right click the link to download the results.<
 MENU;
 }
 
-function output_header()
-{
-    echo <<<HEAD
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name=viewport content="width=device-width, initial-scale=1">
-    <title>PP Workbench: pphtml</title>
-    <link rel="stylesheet" type="text/css" href="rfrank.css">
-  </head>
-  <body>
-  <div id="header" class='hsty'>pphtml</div>
-	<hr style='border:none; border-bottom:1px solid silver;'>  
-HEAD;
-}
-
-function output_footer()
-{
-  echo <<<FOOT
-  <div id="footer">
-    <hr style='border:none; border-bottom:1px solid silver;'>
-    <table summary="" width="100%">
-      <tr>
-        <td align="left">
-        	<a style='font-size:70%' href='index.php'>MAIN PAGE</a>
-        	&nbsp;|&nbsp;
-        	<a style='font-size:70%' href='techinfo-pphtml.php'>TECH INFO</a>
-        </td>
-        <td align="right">
-        <a style='font-size:70%' href='mailto:rfrank@rfrank.net'>CONTACT</a></td>
-      </tr>
-    </table>
-  </div>
-  </body>
-</html>
-FOOT;
-}

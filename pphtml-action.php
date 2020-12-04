@@ -1,23 +1,5 @@
 <?php
-
-// get user's IP address
-
-function getUserIP()
-{
-    if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',') > 0) {
-            $addr = explode(",", $_SERVER['HTTP_X_FORWARDED_FOR']);
-            return trim($addr[0]);
-        }
-        else {
-            return $_SERVER['HTTP_X_FORWARDED_FOR'];
-        }
-    }
-    else {
-        return $_SERVER['REMOTE_ADDR'];
-    }
-}
-
+require_once("base.inc");
 
 $errors = array(); // place to save error messages
 $work = "t"; // a working folder for project data
@@ -165,13 +147,7 @@ $output = shell_exec($command);
 
 // ----- display results -------------------------------------------
 
-echo "<!doctype html>";
-echo "<html lang='en'>";
-echo "<head>";
-echo "  <link rel='stylesheet' type='text/css' href='rfrank.css'>";
-echo "</head>";
-echo "<body>";
-echo "<p><b>Pphtml Results</b></p>";
+output_header("pphtml Results");
 
 $reportok = false;
 
@@ -189,7 +165,3 @@ if ($reportok) {
     </p>For more assistance, please email rfrank@rfrank.net and include this project name: ${upid}</p>";
 }
 
-echo "</body>";
-echo "</html>";
-
-?>
