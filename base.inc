@@ -85,3 +85,34 @@ function getUserIP()
     }
 }
 
+// log tool access
+function log_tool_access($tool, $upid, $work="t")
+{
+    // make a record of this attempted run ---
+    // format is:
+    //    2019-03-31 12:46:44 pptext r5ca0b6b499bec \
+    //    67.161.200.103 [Littleton, United States]
+
+    $ip = getUserIP();
+    $access_key = 'f00ad0e10a4ebe4ec5cb3ffd6c1dc4c8';
+
+    // Initialize CURL:
+    $ch = curl_init("http://api.ipstack.com/$ip?access_key=$access_key");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // Store the data:
+    $json = curl_exec($ch);
+    curl_close($ch);
+
+    // Decode JSON response:
+    $api_result = json_decode($json, true);
+
+    // from: https://ipstack.com/documentation
+    $city = $api_result['city'];
+    $country = $api_result['country_name'];
+
+    $s = sprintf("%s %6s %s %s [%s, %s]\n",
+        date('Y-m-d H:i:s'), $tool, $upid, $ip, $city, $country
+    );
+    file_put_contents($work . "/access.log", $s, FILE_APPEND);
+}
