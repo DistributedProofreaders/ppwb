@@ -76,6 +76,18 @@ function output_footer($addl_links=[])
 FOOT;
 }
 
+// initialize a working directory to store uploaded and processed files
+function init_workdir()
+{
+    $work = "t";
+    $upid = uniqid('r');
+
+    $workdir = "$work/$upid";
+    mkdir($workdir, 0755);
+
+    return [$workdir, $upid];
+}
+
 // get user's IP address
 function getUserIP()
 {

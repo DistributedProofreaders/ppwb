@@ -1,15 +1,8 @@
 <?php
 require_once("base.inc");
 
-$work = "t"; // a working folder for project data
-$upid = uniqid('r'); // unique project id
-$extensions = array( // allowed file extensions
-    "txt", "TXT"
-);
-
-// create a unique workbench project folder in t
-$workdir = "$work/$upid";
-mkdir($workdir, 0755);
+list($workdir, $upid) = init_workdir();
+$extensions = ["txt", "TXT"]; // allowed file extensions
 
 // ----- process the main project file ---------------------------------
 
@@ -40,7 +33,7 @@ if ($target_name != "") {
         $cmd = "iconv -f ISO_8859-1 -t UTF-8 -o '${tmpfname}' '${target_name}'";
         exec($cmd, $ppf_output, $ppf_exitcode);
         rename($tmpfname, $target_name);
-        file_put_contents("${work}/${upid}/converted-main.txt", "text file converted from ISO-8859");
+        file_put_contents("$workdir/converted-main.txt", "text file converted from ISO-8859");
     }
 }
 
@@ -55,7 +48,7 @@ if ($gtarget_name != "") {
         $cmd = "iconv -f ISO_8859-1 -t UTF-8 -o '${tmpfname}' '${gtarget_name}'";
         exec($cmd, $ppf_outputg, $ppf_exitcodeg);
         rename($tmpfname, $gtarget_name);
-        file_put_contents("${work}/${upid}/converted-gwf.txt", "good words file converted from ISO-8859");
+        file_put_contents("$workdir/converted-gwf.txt", "good words file converted from ISO-8859");
     }
 }
 
@@ -132,11 +125,11 @@ if ($gtarget_name != "") {
 // ----- run the pptext command ----------------------------------------
 
 // build the command
-$scommand = './bin/pptext ' . $useropts . $gw . ' -i "' . $target_name . '" -o ' . $work . "/" . $upid;
+$scommand = './bin/pptext ' . $useropts . $gw . ' -i "' . $target_name . '" -o ' . $workdir;
 $command = escapeshellcmd($scommand) . " 2>&1";
 
 // echo $command;
-file_put_contents("${work}/${upid}/command.txt", $command);
+file_put_contents("$workdir/command.txt", $command);
 
 // and finally, run pptext
 $output = shell_exec($command);
@@ -148,12 +141,12 @@ output_header("pptext Results");
 $reportok = false;
 
 echo "<p>";
-if (file_exists("${work}/${upid}/report.html")) {
-   echo "results available: <a href='${work}/${upid}/report.html'>here</a>.<br/>";
+if (file_exists("$workdir/report.html")) {
+   echo "results available: <a href='$workdir/report.html'>here</a>.<br/>";
    $reportok = true;
 }
-if (file_exists("${work}/${upid}/scanreport.txt")) {
-   echo "punctuation scan report: <a href='${work}/${upid}/scanreport.txt'>here</a>.<br/>";
+if (file_exists("$workdir/scanreport.txt")) {
+   echo "punctuation scan report: <a href='$workdir/scanreport.txt'>here</a>.<br/>";
    $reportok = true;
 }
 if ($reportok) {

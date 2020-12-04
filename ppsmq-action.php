@@ -1,15 +1,8 @@
 <?php
 require_once("base.inc");
 
-$work = "t"; // a working folder for project data
-$upid = uniqid('r'); // unique project id
-$extensions = array( // allowed file extensions
-    "txt","htm","html"
-);
-
-// create a unique workbench project folder in t
-$workdir = "$work/$upid";
-mkdir($workdir, 0755);
+list($workdir, $upid) = init_workdir();
+$extensions = ["txt", "htm", "html"]; // allowed file extensions
 
 // ----- process the main project file ---------------------------------
 
@@ -22,7 +15,7 @@ log_tool_access("ppsmq", $upid);
 // ----- run the ppsmq command ----------------------------------------
 
 // build the command
-$scommand = 'python3 ./bin/ppsmq.py -i ' . $target_name . ' -o ' . $work . '/' . $upid . '/report.txt';
+$scommand = 'python3 ./bin/ppsmq.py -i ' . $target_name . ' -o ' . $workdir . '/report.txt';
 $command = escapeshellcmd($scommand) . " 2>&1";
 // echo $command;
 
@@ -36,8 +29,8 @@ output_header("ppsmq Results");
 $reportok = false;
 
 echo "<p>";
-if (file_exists("${work}/${upid}/report.txt")) {
-   echo "results available: <a href='${work}/${upid}/report.txt'>here</a>.<br/>";
+if (file_exists("$workdir/report.txt")) {
+   echo "results available: <a href='$workdir/report.txt'>here</a>.<br/>";
    $reportok = true;
 }
 if ($reportok) {
