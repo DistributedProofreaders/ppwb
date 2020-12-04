@@ -15,8 +15,18 @@ log_tool_access("ppsmq", $upid);
 // ----- run the ppsmq command ----------------------------------------
 
 // build the command
-$scommand = 'python3 ./bin/ppsmq.py -i ' . $target_name . ' -o ' . $workdir . '/report.txt';
-$command = escapeshellcmd($scommand) . " 2>&1";
+$scommand = join(" ", [
+	"python3",
+	"./bin/ppsmq.py",
+	"-i " . escapeshellarg($target_name),
+	"-o " . escapeshellarg("$workdir/report.txt")
+]);
+
+$command = join(" ", [
+	escapeshellcmd($scommand),
+	"2>&1"
+]);
+
 // echo $command;
 
 // and finally, run ppsmq
