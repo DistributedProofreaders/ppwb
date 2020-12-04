@@ -1,130 +1,21 @@
 <?php
 require_once("base.inc");
 
-$errors = array(); // place to save error messages
 $work = "t"; // a working folder for project data
 $upid = uniqid('r'); // unique project id
 $options = "";  // user-requested options
 
-// in directory /tmp
-$tfilename1 = "/tmp/" . $upid . "-1";
-$tfilename2 = "/tmp/" . $upid . "-2";
-
-// in project folder
-$target_name1 = "";
-$target_name2 = "";
-
 // create a unique workbench project folder in t
-mkdir($work . "/" . $upid, 0755);
+$workdir = "$work/$upid";
+mkdir($workdir, 0755);
 
 // ----- process the first file ---------------------------------
 
-if (isset($_FILES['userfile1']) && $_FILES['userfile1']['name'] != "") {
-
-    // get the information about the file
-    $file_name = $_FILES['userfile1']['name'];
-    $file_size = $_FILES['userfile1']['size'];
-    $file_tmp = $_FILES['userfile1']['tmp_name'];
-    $file_type = $_FILES['userfile1']['type'];
-    $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
-    move_uploaded_file($file_tmp, $tfilename1);
-
-    // begin a series of validation tests
-
-    // does it pass the anti-virus tests?
-    $av_test_result = array();
-    $av_retval = 0;
-    $cmd = "/usr/bin/clamdscan " . escapeshellcmd($tfilename1);
-    exec($cmd, $av_test_result, $av_retval);
-    if ($av_retval == 1) {
-        $errors[] = "input file 1 rejected by clamdscan";
-        // destroy uploaded file
-        unlink( escapeshellcmd($tfilename1) );
-    }
-
-    // was a file uploaded?
-    if ($_FILES['userfile1']['size'] == 0) {
-        $errors[] = 'no file was uploaded';
-    }
-
-    // is it small enough?
-    if ($file_size > 31457280) {
-        $errors[] = "file size must be less than 30 MB";
-    }
-
-    // if any errors, report and terminate
-    if (empty($errors) == false) {
-        echo "<pre>";
-        echo "process terminated during processing uploaded file:<br/>";
-        foreach ($errors as $key => $value) {
-            echo $value . "<br/>";
-        }
-        echo "</pre>";
-        exit(1);
-    }
-
-    // move the uploaded file to the project folder
-    $target_name1 = $work . "/" . $upid . "/" . $file_name;
-    rename($tfilename1, $target_name1);
-} else {
-  echo "missing filename 1";
-  exit(1);
-}
-
+$target_name1 = process_file_upload("userfile1", $workdir);
 
 // ----- process the second file ---------------------------------
 
-if (isset($_FILES['userfile2']) && $_FILES['userfile2']['name'] != "") {
-
-    // get the information about the file
-    $file_name = $_FILES['userfile2']['name'];
-    $file_size = $_FILES['userfile2']['size'];
-    $file_tmp = $_FILES['userfile2']['tmp_name'];
-    $file_type = $_FILES['userfile2']['type'];
-    $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
-    move_uploaded_file($file_tmp, $tfilename2);
-
-    // begin a series of validation tests
-
-    // does it pass the anti-virus tests?
-    $av_test_result = array();
-    $av_retval = 0;
-    $cmd = "/usr/bin/clamdscan " . escapeshellcmd($tfilename2);
-    exec($cmd, $av_test_result, $av_retval);
-    if ($av_retval == 1) {
-        $errors[] = "input file 2 rejected by clamdscan";
-        // destroy uploaded file
-        unlink( escapeshellcmd($tfilename2) );
-    }
-
-    // was a file uploaded?
-    if ($_FILES['userfile2']['size'] == 0) {
-        $errors[] = 'no file was uploaded';
-    }
-
-    // is it small enough?
-    if ($file_size > 31457280) {
-        $errors[] = "file size must be less than 30 MB";
-    }
-
-    // if any errors, report and terminate
-    if (empty($errors) == false) {
-        echo "<pre>";
-        echo "process terminated during processing uploaded file:<br/>";
-        foreach ($errors as $key => $value) {
-            echo $value . "<br/>";
-        }
-        echo "</pre>";
-        exit(1);
-    }
-
-    // move the uploaded file to the project folder
-    $target_name2 = $work . "/" . $upid . "/" . $file_name;
-    rename($tfilename2, $target_name2);
-} else {
-  echo "missing filename 2";
-  exit(1);
-}
+$target_name2 = process_file_upload("userfile2", $workdir);
 
 // ----- process user options ---------------------------------------
 
