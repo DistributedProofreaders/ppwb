@@ -203,3 +203,22 @@ function process_file_upload($formid, $workdir, $allowed_extensions=[])
 
     return $final_filepath;
 }
+
+// If a text file is ISO-8859 convert it to UTF-8
+// Returns true if a conversion was necessary, else false
+function ensure_utf8_file($filename) {
+    $cmd = sprintf("file %s", escapeshellarg($filename));
+    exec($cmd, $ppf_output, $ppf_exitcode);
+    if (strpos($ppf_output[0], "ISO-8859") !== false) {
+        // Latin-1. convert to UTF-8
+        $tmpfname = "$filename.tmp";
+        $cmd = sprintf("iconv -f ISO_8859-1 -t UTF-8 -o %s %s",
+            escapeshellarg($tmpfname), escapeshellarg($filename)
+        );
+        exec(escapeshellcmd($cmd), $ppf_output, $ppf_exitcode);
+        rename($tmpfname, $filename);
+        return true;
+    }
+    return false;
+}
+

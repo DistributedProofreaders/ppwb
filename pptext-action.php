@@ -23,33 +23,13 @@ log_tool_access("pptext", $upid);
 // ----- user has option of uploading a Latin-1 file -------------------
 
 // main file
-if ($target_name != "") {
-    $cmd = "file '${target_name}'";
-    exec($cmd, $ppf_output, $ppf_exitcode);
-    $pos = strpos($ppf_output[0], "ISO-8859");
-    if ($pos !== false) {
-        // Latin-1. convert to UTF-8
-        $tmpfname = "/tmp/trash01.txt";
-        $cmd = "iconv -f ISO_8859-1 -t UTF-8 -o '${tmpfname}' '${target_name}'";
-        exec($cmd, $ppf_output, $ppf_exitcode);
-        rename($tmpfname, $target_name);
-        file_put_contents("$workdir/converted-main.txt", "text file converted from ISO-8859");
-    }
+if(ensure_utf8_file($target_name)) {
+    file_put_contents("$workdir/converted-main.txt", "text file converted from ISO-8859\n");
 }
 
 // good words file
-if ($gtarget_name != "") {
-    $cmd = "file '${gtarget_name}'";
-    exec($cmd, $ppf_outputg, $ppf_exitcodeg);
-    $pos = strpos($ppf_outputg[0], "ISO-8859");
-    if ($pos !== false) {
-        // Latin-1. convert to UTF-8
-        $tmpfname = "/tmp/trash01.txt";
-        $cmd = "iconv -f ISO_8859-1 -t UTF-8 -o '${tmpfname}' '${gtarget_name}'";
-        exec($cmd, $ppf_outputg, $ppf_exitcodeg);
-        rename($tmpfname, $gtarget_name);
-        file_put_contents("$workdir/converted-gwf.txt", "good words file converted from ISO-8859");
-    }
+if ($gtarget_name && ensure_utf8_file($gtarget_name)) {
+    file_put_contents("$workdir/converted-gwf.txt", "good words file converted from ISO-8859\n");
 }
 
 // ----- process user options ------------------------------------------
