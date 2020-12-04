@@ -1,3 +1,5 @@
 t
-pphtml
-pptext
+bin/pptext
+bin/hebelist.txt
+bin/pphtml.py
+bin/scannos.txt
