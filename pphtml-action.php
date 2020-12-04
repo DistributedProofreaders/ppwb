@@ -1,15 +1,8 @@
 <?php
 require_once("base.inc");
 
-$work = "t"; // a working folder for project data
-$upid = uniqid('r'); // unique project id
-$extensions = array( // allowed file extensions
-    "zip"
-);
-
-// create a unique workbench project folder in t
-$workdir = "$work/$upid";
-mkdir($workdir, 0755);
+list($workdir, $upid) = init_workdir();
+$extensions = ["zip"]; // allowed file extensions
 
 // ----- process the main project file ---------------------------------
 
@@ -24,7 +17,7 @@ log_tool_access("pphtml", $upid);
 $zipArchive = new ZipArchive();
 $result = $zipArchive->open($target_name);
 if ($result === TRUE) {
-    $zipArchive->extractTo($work . "/" . $upid);
+    $zipArchive->extractTo($workdir);
     $zipArchive->close();
 }
 else {
@@ -34,8 +27,8 @@ else {
 
 // find the name of the user's HTML file. only one allowed
 
-$fileList1 = glob($work . "/" . $upid . '/*.htm');
-$fileList2 = glob($work . "/" . $upid . '/*.html');
+$fileList1 = glob("$workdir/*.htm");
+$fileList2 = glob("$workdir/*.html");
 $user_htmlfile = "";
 if (count($fileList1) == 1) {
     $user_htmlfile = $fileList1[0];
@@ -57,14 +50,14 @@ if(isset($_POST['ver']) && $_POST['ver'] == 'Yes') {
 // ----- run the pphtml command ----------------------------------------
 
 // build the command
-// $scommand = './pphtml -i ' . $target_name . ' -o ' . $work . "/" . $upid; // orthogonal
-// $scommand = './bin/pphtml -i ' . $user_htmlfile . ' -o ' . $work . "/" . $upid . "/report.html";
-$scommand = 'python3 ./bin/pphtml.py ' . $verbose . ' -i "' . $user_htmlfile . '" -o ' . $work . "/" . $upid . "/report.html";
+// $scommand = './pphtml -i ' . $target_name . ' -o ' . $workdir; // orthogonal
+// $scommand = './bin/pphtml -i ' . $user_htmlfile . ' -o ' . $workdir . "/report.html";
+$scommand = 'python3 ./bin/pphtml.py ' . $verbose . ' -i "' . $user_htmlfile . '" -o ' . $workdir . "/report.html";
 
 $command = escapeshellcmd($scommand) . " 2>&1";
 
 // echo $command;
-file_put_contents("${work}/${upid}/command.txt", $command);
+file_put_contents("$workdir/command.txt", $command);
 
 // and finally, run pphtml
 $output = shell_exec($command);
@@ -76,8 +69,8 @@ output_header("pphtml Results");
 $reportok = false;
 
 echo "<p>";
-if (file_exists("${work}/${upid}/report.html")) {
-   echo "results available: <a href='${work}/${upid}/report.html'>here</a>.<br/>";
+if (file_exists("$workdir/report.html")) {
+   echo "results available: <a href='$workdir/report.html'>here</a>.<br/>";
    $reportok = true;
 }
 if ($reportok) {

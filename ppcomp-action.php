@@ -1,13 +1,8 @@
 <?php
 require_once("base.inc");
 
-$work = "t"; // a working folder for project data
-$upid = uniqid('r'); // unique project id
+list($workdir, $upid) = init_workdir();
 $options = "";  // user-requested options
-
-// create a unique workbench project folder in t
-$workdir = "$work/$upid";
-mkdir($workdir, 0755);
 
 // ----- process the first file ---------------------------------
 
@@ -86,10 +81,10 @@ log_tool_access("ppcomp", $upid);
 // ----- run the ppcomp command ----------------------------------------
 
 $scommand = 'PYTHONIOENCODING=utf-8:surrogateescape /home/rfrank/env/bin/python3 ./bin/comp_pp.py ' . $options . " " . $target_name1 . " " . $target_name2;
-$command = escapeshellcmd($scommand) . " > " . $work . "/" . $upid . "/result.html 2>&1";
+$command = escapeshellcmd($scommand) . " > " . $workdir . "/result.html 2>&1";
 
 // echo $command;
-file_put_contents("${work}/${upid}/command.txt", $command);
+file_put_contents("$workdir/command.txt", $command);
 
 $output = shell_exec($command);
 
@@ -100,8 +95,8 @@ output_header("ppcomp Results");
 $reportok = false;
 
 echo "<p>";
-if (file_exists("${work}/${upid}/result.html")) {
-   echo "results available: <a href='${work}/${upid}/result.html'>here</a>.<br/>";
+if (file_exists("$workdir/result.html")) {
+   echo "results available: <a href='$workdir/result.html'>here</a>.<br/>";
    $reportok = true;
 }
 if ($reportok) {
