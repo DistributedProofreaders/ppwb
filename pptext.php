@@ -21,6 +21,7 @@ related program, <a href='pphtml.php'>pphtml</a>, checks the HTML version.
 <li>for very large files, it is suggested to
 "skip edit distance checks" to significantly reduce run time.</li>
 <li>by default, all tests are run. You can choose to enable or disable individual tests.
+<li>filenames must not contain an apostrophe</li>
 </ol>
 
 <p>To use this program, drag and drop a text file onto the top "Browse" button below.

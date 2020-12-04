@@ -148,12 +148,18 @@ if ($user_htmlfile == "") {
     exit(1);       
 }
 
+// see if user has ticked the "verbose" box
+$verbose = "";
+if(isset($_POST['ver']) && $_POST['ver'] == 'Yes') {
+    $verbose = " -v ";
+}
+
 // ----- run the pphtml command ----------------------------------------
 
 // build the command
 // $scommand = './pphtml -i ' . $target_name . ' -o ' . $work . "/" . $upid; // orthogonal
 // $scommand = './bin/pphtml -i ' . $user_htmlfile . ' -o ' . $work . "/" . $upid . "/report.html";
-$scommand = 'python3 ./bin/pphtml.py -i "' . $user_htmlfile . '" -o ' . $work . "/" . $upid . "/report.html";
+$scommand = 'python3 ./bin/pphtml.py ' . $verbose . ' -i "' . $user_htmlfile . '" -o ' . $work . "/" . $upid . "/report.html";
 
 $command = escapeshellcmd($scommand) . " 2>&1";
 

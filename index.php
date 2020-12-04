@@ -30,7 +30,7 @@ files. Follow these links for details and to access the programs:</p>
 
 <p>Please remember to also run these tests:</p>
   <ul style='margin-top:0'>
-    <li><a href='http://epubmaker.pglaf.org/'>Gutenberg online epubmaker</a></li>
+    <li><a href='https://ebookmaker.pglaf.org/'>Gutenberg online bookmaker</a></li>
     <li><a href="http://validator.w3.org/">W3C HTML markup validator</a></li>
     <li><a href="http://jigsaw.w3.org/css-validator/">W3C CSS validator</a></li>
     <!-- <li><a href="http://validator.w3.org/checklink">W3C Link Checker</a></li> -->

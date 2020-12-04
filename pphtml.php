@@ -20,6 +20,10 @@ finished you should see a screen announcing "Pphtml Results" with a link to the 
 of the run. Left click to view or right click the link to download the results.</p>
 
 <form target="_blank" action="pphtml-action.php" method="POST" enctype="multipart/form-data">
+
+<input type="checkbox" name="ver" value="Yes" id="ver" autocomplete="off">
+<label for="ver">verbose operation</label><br/>
+
 <table>
 <tr>
     <td style='text-align:right'><label for='userfile'>User zip file (HTML+images)</label></td>
