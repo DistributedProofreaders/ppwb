@@ -34,79 +34,75 @@ if ($gtarget_name && ensure_utf8_file($gtarget_name)) {
 
 // ----- process user options ------------------------------------------
 
+$options = [];
+
 // get the user's chosen language(s) 
-$wlang = "";
-$nlang = 0;  // number of languages
+$wlangs = [];
 $isEnglish = false;
 if(isset($_POST['wlangs'])){
     foreach($_POST['wlangs'] as $alang){
-        $wlang = $wlang . "," . $alang;
-        $nlang = $nlang + 1;
+        $wlangs[] = $alang;
         if ($alang == "en" || $alang == "en_GB" || $alang == "en_US" || $alang == "en_CA" ) {
             $isEnglish = true;
         }        
     }
 }
 
-// if no "English" language is selected, disable jeebies
-$jflag = "";
-if (!$isEnglish) {
-    $jflag = " -j ";
-}
-
-if ($nlang == 0) {
+if (count($wlangs) == 0) {
     echo "Please select at least one language. Exiting.";
     exit(1);
 }
-$wlang = substr($wlang, 1);  // remove leading comma
-$wlang = " -a " . $wlang . " ";
+
+$options[] = "-a " . escapeshellarg(join(",", $wlangs));
 
 // aggregate user-selected tests
-$utests = " -t ";
-if(isset($_POST['rat']) && $_POST['rat'] == 'Yes') {
-  $utests = $utests . "a";
+$available_tests = [
+    "rat" => "a",
+    "rspl" => "s",
+    "redi" => "e",
+    "rtxt" => "t",
+    "rthc" => "1",
+    "rhsc" => "2",
+    "rsqc" => "q",
+];
+
+// only allow jeebies if an "English" language is selected
+if ($isEnglish) {
+    $available_tests["rjee"] = "j";
 }
-if(isset($_POST['rspl']) && $_POST['rspl'] == 'Yes') {
-  $utests = $utests . "s";
+
+$utests = [];
+foreach($available_tests as $key => $val) {
+    if(isset($_POST[$key]) && $_POST[$key] == 'Yes') {
+        $utests[] = $val;
+    }
 }
-if(isset($_POST['redi']) && $_POST['redi'] == 'Yes') {
-  $utests = $utests . "e";
-}
-if(isset($_POST['rtxt']) && $_POST['rtxt'] == 'Yes') {
-  $utests = $utests . "t";
-}
-if(isset($_POST['rthc']) && $_POST['rthc'] == 'Yes') {
-  $utests = $utests . "1";
-}
-if(isset($_POST['rhsc']) && $_POST['rhsc'] == 'Yes') {
-  $utests = $utests . "2";
-}
-if(isset($_POST['rjee']) && $_POST['rjee'] == 'Yes') {
-  $utests = $utests . "j";
-}
-if(isset($_POST['rsqc']) && $_POST['rsqc'] == 'Yes') {
-  $utests = $utests . "q";
-}
+$options[] = "-t " . escapeshellarg(join("", $utests));
 
 // see if user has ticked the "verbose" box
-$verbose = "";
 if(isset($_POST['ver']) && $_POST['ver'] == 'Yes') {
-    $verbose = " -v ";
+    $options[] = " -v ";
 }
 
-$useropts = $wlang . $utests . $verbose;
-
 // include good words file if present
-$gw = "";
-if ($gtarget_name != "") {
-    $gw = " -g \"" . $gtarget_name . "\" ";
+if ($gtarget_name) {
+    $options[] = "-g " . escapeshellarg($gtarget_name);
 }
 
 // ----- run the pptext command ----------------------------------------
 
 // build the command
-$scommand = './bin/pptext ' . $useropts . $gw . ' -i "' . $target_name . '" -o ' . $workdir;
-$command = escapeshellcmd($scommand) . " 2>&1";
+$scommand = join(" ", [
+    "./bin/pptext",
+    join(" ", $options),
+    "-i " . escapeshellarg($target_name),
+    "-o " . escapeshellarg($workdir)
+]);
+
+$command = join(" ", [
+    escapeshellcmd($scommand),
+    "2>&1"
+]);
 
 // echo $command;
 file_put_contents("$workdir/command.txt", $command);

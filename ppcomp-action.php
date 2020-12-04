@@ -2,7 +2,6 @@
 require_once("base.inc");
 
 list($workdir, $upid) = init_workdir();
-$options = "";  // user-requested options
 
 // ----- process the first file ---------------------------------
 
@@ -14,64 +13,34 @@ $target_name2 = process_file_upload("userfile2", $workdir);
 
 // ----- process user options ---------------------------------------
 
-if(isset($_POST['ignore-format'])){
-    $options = $options . " --" . "ignore-format";
-}
- 
-if(isset($_POST['suppress-footnote-tags'])){
-    $options = $options . " --" . "suppress-footnote-tags";
-}
+$options = [];
 
-if(isset($_POST['suppress-illustration-tags'])){
-    $options = $options . " --" . "suppress-illustration-tags";
-}
+// list of available boolean options; these are checkboxes on the page
+// and the names map directly to the comp_pp.py args
+$available_boolean_options = [
+    'ignore-format',
+    'suppress-footnote-tags',
+    'suppress-illustration-tags',
+    'ignore-case',
+    'extract-footnotes',
+    'ignore-0-space',
+    'suppress-nbsp-num',
+    'suppress-proofers-notes',
+    'regroup-split-words',
+    'css-greek-title-plus',
+    'css-add-illustration',
+    'css-no-default',
+    'without-html-header'
+];
 
-if(isset($_POST['ignore-case'])){
-    $options = $options . " --" . "ignore-case";
+foreach($available_boolean_options as $option) {
+    if(isset($_POST[$option])) {
+        $options[] = "--$option";
+    }
 }
-
-if(isset($_POST['extract-footnotes'])){
-    $options = $options . " --" . "extract-footnotes";
-}
-
-if(isset($_POST['ignore-0-space'])){
-    $options = $options . " --" . "ignore-0-space";
-}
-
-if(isset($_POST['suppress-nbsp-num'])){
-    $options = $options . " --" . "suppress-nbsp-num";
-}
-
-if(isset($_POST['suppress-proofers-notes'])){
-    $options = $options . " --" . "suppress-proofers-notes";
-}
-
-if(isset($_POST['regroup-split-words'])){
-    $options = $options . " --" . "regroup-split-words";
-}
-
-if(isset($_POST['css-greek-title-plus'])){
-    $options = $options . " --" . "css-greek-title-plus";
-}
-
-if(isset($_POST['css-add-illustration'])){
-    $options = $options . " --" . "css-add-illustration";
-}
-
-if(isset($_POST['css-no-default'])){
-    $options = $options . " --" . "css-no-default";
-}
-
-if(isset($_POST['without-html-header'])){
-    $options = $options . " --" . "without-html-header";
-}
-
-// if(isset($_POST['bold-replace'])){
-//    $options = $options . " --css-bold =";
-// }
 
 if(isset($_POST['txt-cleanup-type'])){
-    $options = $options . " --" . "txt-cleanup-type" . " " . $_POST['txt-cleanup-type'];
+    $options[] = "--txt-cleanup-type " . escapeshellarg($_POST['txt-cleanup-type']);
 }
 
 // ----- no errors. proceed ----------------------------------------
@@ -80,8 +49,21 @@ log_tool_access("ppcomp", $upid);
 
 // ----- run the ppcomp command ----------------------------------------
 
-$scommand = 'PYTHONIOENCODING=utf-8:surrogateescape /home/rfrank/env/bin/python3 ./bin/comp_pp.py ' . $options . " " . $target_name1 . " " . $target_name2;
-$command = escapeshellcmd($scommand) . " > " . $workdir . "/result.html 2>&1";
+$scommand = join(" ", [
+    "PYTHONIOENCODING=utf-8:surrogateescape",
+    "/home/rfrank/env/bin/python3",
+    "./bin/comp_pp.py",
+    join(" ", $options),
+    escapeshellarg($target_name1),
+    escapeshellarg($target_name2)
+]);
+
+$command = join(" ", [
+    escapeshellcmd($scommand),
+    " > ",
+    escapeshellarg("$workdir/result.html"),
+    "2>&1"
+]);
 
 // echo $command;
 file_put_contents("$workdir/command.txt", $command);
