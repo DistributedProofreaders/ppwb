@@ -1,6 +1,14 @@
 <?php
 // Common functions used by many/all pages
 
+// Handle exceptions in a user-friendly manner
+set_exception_handler('exception_handler');
+
+function exception_handler($exception)
+{
+    echo "Error: " . htmlspecialchars($exception->getMessage());
+}
+
 // Output valid HTML page header
 function output_header($header="", $addl_links=[], $js="")
 {
@@ -115,4 +123,71 @@ function log_tool_access($tool, $upid, $work="t")
         date('Y-m-d H:i:s'), $tool, $upid, $ip, $city, $country
     );
     file_put_contents($work . "/access.log", $s, FILE_APPEND);
+}
+
+class UploadError extends Exception {}
+
+function process_file_upload($formid, $workdir, $allowed_extensions=[])
+{
+    if(!isset($_FILES[$formid]) || !$_FILES[$formid]["name"]) {
+        throw new UploadError("No file was uploaded");
+    }
+
+    // get the information about the file
+    $file_name = $_FILES[$formid]['name'];
+    $file_size = $_FILES[$formid]['size'];
+    $file_tmp = $_FILES[$formid]['tmp_name'];
+    $file_type = $_FILES[$formid]['type'];
+
+    // lowercase the extension
+    $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+    // restrict basename to alphanumeric, -, or _ after replacing spaces
+    // with _
+    $file_basename = pathinfo($file_name, PATHINFO_FILENAME);
+    $file_basename = preg_replace("/\s+/", "_", $file_basename);
+    $file_basename = preg_replace("/[^-_a-zA-Z0-9]/", "", $file_basename);
+    if(!$file_basename) {
+        throw new UploadError("Filename did not contain any valid characters");
+    }
+
+    $final_filepath = "$workdir/$file_basename.$file_ext";
+    if(move_uploaded_file($file_tmp, $final_filepath) === FALSE) {
+        throw new UploadError("error moving uploaded file to working directory");
+    }
+
+    // begin a series of validation tests
+    try {
+        // does it pass the anti-virus tests?
+        $av_test_result = array();
+        $av_retval = 0;
+        $cmd = "/usr/bin/clamdscan '" . escapeshellcmd($final_filepath) . "'";
+        exec($cmd, $av_test_result, $av_retval);
+        if ($av_retval == 1) {
+            throw new UploadError("file rejected by AV scanner");
+        }
+
+        // was a file uploaded?
+        if ($_FILES[$formid]['size'] == 0) {
+            throw new UploadError("no file was uploaded");
+        }
+
+        // do they claim it's an allowed type?
+        if ($allowed_extensions && in_array($file_ext, $allowed_extensions) === false) {
+            throw new UploadError(
+                sprintf("file must have a %s extension", join(" or ", $allowed_extensions))
+            );
+        }
+
+        // is it small enough?
+        if ($file_size > 31457280) {
+            throw new UploadError("file size must be less than 30 MB");
+        }
+    } catch(Exception $e) {
+        unlink($final_filepath);
+        rmdir($workdir);
+        throw $e;
+    }
+
+    return $final_filepath;
 }
