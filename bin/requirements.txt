@@ -1,0 +1,6 @@
+# comp_pp.py requirements
+lxml
+tinycss
+cssselect
+
+# ppsmq.py has no requirements
