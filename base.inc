@@ -30,6 +30,16 @@ global $help_url, $docs_url;
 $help_url = "https://www.pgdp.net/phpBB3/viewtopic.php?f=13&t=64838";
 $docs_url = "https://www.pgdp.net/wiki/DP_Official_Documentation:PP_and_PPV/Post-Processing_Workbench";
 
+// $maint_ips specifies IP addresses that are allowed to call the maintenance
+// scripts, beyond localhost.
+global $maint_ips;
+$maint_ips = [];
+
+// $maint_days_ago specifies how many days of files to keep when the
+// maintenance script runs. Files older than this many days will be deleted.
+global $maint_days_ago;
+$maint_days_ago = 14;
+
 // Load an (optional) configuration file
 if(is_file("config.php")) {
     include("config.php");
