@@ -1,8 +1,8 @@
 <?php
+require_once("base.inc");
 
 output_header();
 output_content();
-output_footer();
 
 function output_content()
 {
@@ -41,37 +41,3 @@ files. Follow these links for details and to access the programs:</p>
 MENU;
 }
 
-function output_header()
-{
-    echo <<<HEAD
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name=viewport content="width=device-width, initial-scale=1">
-    <title>Post-Processing Workbench</title>
-    <link rel="stylesheet" type="text/css" href="rfrank.css">
-  </head>
-  <body>
-  <div id="header" class='hsty'>pp workbench</div>
-	<hr style='border:none; border-bottom:1px solid silver;'>  
-HEAD;
-}
-
-function output_footer()
-{
-  echo <<<FOOT
-  <div id="footer">
-    <hr style='border:none; border-bottom:1px solid silver;'>
-    <table summary="" width="100%">
-      <tr>
-        <td align="left">&nbsp;</td>
-        <td align="right">
-        <a style='font-size:70%' href='mailto:rfrank@rfrank.net'>CONTACT</a></td>
-      </tr>
-    </table>
-  </div>
-  </body>
-</html>
-FOOT;
-}
