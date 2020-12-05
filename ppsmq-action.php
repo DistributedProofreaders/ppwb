@@ -1,7 +1,7 @@
 <?php
 require_once("base.inc");
 
-list($workdir, $upid) = init_workdir();
+list($workdir, $workurl, $upid) = init_workdir();
 $extensions = ["txt", "htm", "html"]; // allowed file extensions
 
 // ----- process the main project file ---------------------------------
@@ -16,7 +16,7 @@ log_tool_access("ppsmq", $upid);
 
 // build the command
 $scommand = join(" ", [
-	"python3",
+	$python_runner,
 	"./bin/ppsmq.py",
 	"-i " . escapeshellarg($target_name),
 	"-o " . escapeshellarg("$workdir/report.txt")
@@ -40,7 +40,7 @@ $reportok = false;
 
 echo "<p>";
 if (file_exists("$workdir/report.txt")) {
-   echo "results available: <a href='$workdir/report.txt'>here</a>.<br/>";
+   echo "results available: <a href='$workurl/report.txt'>here</a>.<br/>";
    $reportok = true;
 }
 if ($reportok) {

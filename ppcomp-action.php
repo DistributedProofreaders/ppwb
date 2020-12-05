@@ -1,7 +1,7 @@
 <?php
 require_once("base.inc");
 
-list($workdir, $upid) = init_workdir();
+list($workdir, $workurl, $upid) = init_workdir();
 
 // ----- process the first file ---------------------------------
 
@@ -50,8 +50,7 @@ log_tool_access("ppcomp", $upid);
 // ----- run the ppcomp command ----------------------------------------
 
 $scommand = join(" ", [
-    "PYTHONIOENCODING=utf-8:surrogateescape",
-    "/home/rfrank/env/bin/python3",
+    $python_runner,
     "./bin/comp_pp.py",
     join(" ", $options),
     escapeshellarg($target_name1),
@@ -78,7 +77,7 @@ $reportok = false;
 
 echo "<p>";
 if (file_exists("$workdir/result.html")) {
-   echo "results available: <a href='$workdir/result.html'>here</a>.<br/>";
+   echo "results available: <a href='$workurl/result.html'>here</a>.<br/>";
    $reportok = true;
 }
 if ($reportok) {

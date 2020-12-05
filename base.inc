@@ -1,8 +1,38 @@
 <?php
-// Common functions used by many/all pages
+// This file is included at the top of every page. It sets up some common
+// infrastructure and defines some common functions.
 
 // Handle exceptions in a user-friendly manner
 set_exception_handler('exception_handler');
+
+//===========================================================================
+// Configuration
+
+// Define some global configuration values. These can be overridden in
+// an optional configuration file (config.php).
+
+// $base_workdir is where files are uploaded and where results are stored.
+// It must be writeable by the webserver and also needs to be accessible by
+// URL ($base_workurl). $base_workurl can be a relative or absolute URL to
+// where the workfiles can be accessed.
+global $base_workdir, $base_workurl;
+$base_workdir = "./t";
+$base_workurl = "./t";
+
+// $python_runner defines the python binary, or proxy script, to run the
+// python-based tools. See README.md for more information on setting up
+// the python tools.
+global $python_runner;
+$python_runner = "python3";
+
+// Load an (optional) configuration file
+if(is_file("config.php")) {
+    include("config.php");
+}
+
+
+//===========================================================================
+// Common functions used by many/all pages
 
 function exception_handler($exception)
 {
@@ -79,13 +109,16 @@ FOOT;
 // initialize a working directory to store uploaded and processed files
 function init_workdir()
 {
-    $work = "t";
+    global $base_workdir, $base_workurl;
+
     $upid = uniqid('r');
 
-    $workdir = "$work/$upid";
+    $workdir = "$base_workdir/$upid";
     mkdir($workdir, 0755);
 
-    return [$workdir, $upid];
+    $workurl = "$base_workurl/$upid";
+
+    return [$workdir, $workurl, $upid];
 }
 
 // get user's IP address
