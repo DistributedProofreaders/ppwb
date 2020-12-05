@@ -1,7 +1,7 @@
 <?php
 require_once("base.inc");
 
-list($workdir, $upid) = init_workdir();
+list($workdir, $workurl, $upid) = init_workdir();
 $extensions = ["zip"]; // allowed file extensions
 
 // ----- process the main project file ---------------------------------
@@ -52,7 +52,7 @@ if(isset($_POST['ver']) && $_POST['ver'] == 'Yes') {
 
 // build the command
 $scommand = join(" ", [
-    "python3",
+    $python_runner,
     "./bin/pphtml.py",
     join(" ", $options),
     "-i " . escapeshellarg($user_htmlfile),
@@ -78,7 +78,7 @@ $reportok = false;
 
 echo "<p>";
 if (file_exists("$workdir/report.html")) {
-   echo "results available: <a href='$workdir/report.html'>here</a>.<br/>";
+   echo "results available: <a href='$workurl/report.html'>here</a>.<br/>";
    $reportok = true;
 }
 if ($reportok) {

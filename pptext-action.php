@@ -1,7 +1,7 @@
 <?php
 require_once("base.inc");
 
-list($workdir, $upid) = init_workdir();
+list($workdir, $workurl, $upid) = init_workdir();
 $extensions = ["txt", "TXT"]; // allowed file extensions
 
 // ----- process the main project file ---------------------------------
@@ -118,11 +118,11 @@ $reportok = false;
 
 echo "<p>";
 if (file_exists("$workdir/report.html")) {
-   echo "results available: <a href='$workdir/report.html'>here</a>.<br/>";
+   echo "results available: <a href='$workurl/report.html'>here</a>.<br/>";
    $reportok = true;
 }
 if (file_exists("$workdir/scanreport.txt")) {
-   echo "punctuation scan report: <a href='$workdir/scanreport.txt'>here</a>.<br/>";
+   echo "punctuation scan report: <a href='$workurl/scanreport.txt'>here</a>.<br/>";
    $reportok = true;
 }
 if ($reportok) {
