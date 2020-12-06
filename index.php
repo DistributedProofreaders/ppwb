@@ -12,8 +12,8 @@ two formats for each book: text and HTML. This page provides links to
 programs that may be used to analyze each format:</p>
 
 <ul>
-	<li><a href='./pptext.php'>pptext</a> to analyze a text file</li>
-	<li><a href='./pphtml.php'>pphtml</a> to analyze an HTML file and supplemental folders</li>
+    <li><a href='./pptext.php'>pptext</a> to analyze a text file</li>
+    <li><a href='./pphtml.php'>pphtml</a> to analyze an HTML file and supplemental folders</li>
 </ul>
 
 <p>Two additional programs are provided here. One converts “straight” quotes in
@@ -21,8 +21,8 @@ a text file into smart or “curly” quotes. The other program is used to compa
 files. Follow these links for details and to access the programs:</p>
 
 <ul>
-	<li><a href='./ppsmq.php'>ppsmq</a> to convert straight quotes to curly quotes</li>
-	<li><a href='./ppcomp.php'>ppcomp</a> to compare two files, text or HTML mixed</li>
+    <li><a href='./ppsmq.php'>ppsmq</a> to convert straight quotes to curly quotes</li>
+    <li><a href='./ppcomp.php'>ppcomp</a> to compare two files, text or HTML mixed</li>
 </ul>
 
 <p>

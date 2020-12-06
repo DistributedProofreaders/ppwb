@@ -16,15 +16,15 @@ log_tool_access("ppsmq", $upid);
 
 // build the command
 $scommand = join(" ", [
-	$python_runner,
-	"./bin/ppsmq.py",
-	"-i " . escapeshellarg($target_name),
-	"-o " . escapeshellarg("$workdir/report.txt")
+    $python_runner,
+    "./bin/ppsmq.py",
+    "-i " . escapeshellarg($target_name),
+    "-o " . escapeshellarg("$workdir/report.txt")
 ]);
 
 $command = join(" ", [
-	escapeshellcmd($scommand),
-	"2>&1"
+    escapeshellcmd($scommand),
+    "2>&1"
 ]);
 
 // echo $command;
