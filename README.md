@@ -15,6 +15,8 @@ in the `bin/` directory:
 * [pptext](https://github.com/DistributedProofreaders/pptext)
 * [pphtml](https://github.com/DistributedProofreaders/pphtml)
 
+For ppcomp to work, `dwdiff` needs to be installed as well.
+
 ## Python environment
 
 The external python programs require various python libraries to be installed
