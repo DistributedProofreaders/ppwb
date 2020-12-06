@@ -86,6 +86,6 @@ if ($reportok) {
     echo "<p>Whoops! Something went wrong and no output was generated.
     The error message was<br/><br/>
     <tt>${output}</tt></p>
-    </p>For more assistance, please email rfrank@rfrank.net and include this project name: ${upid}</p>";
+    </p>For more assistance, ask in the <a href='$help_url'>discussion topic</a> and include this identifier: ${upid}</p>";
 }
 

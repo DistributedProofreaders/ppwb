@@ -25,6 +25,11 @@ $base_workurl = "./t";
 global $python_runner;
 $python_runner = "python3";
 
+// URLs for help and documentation links.
+global $help_url, $docs_url;
+$help_url = "https://www.pgdp.net/phpBB3/viewtopic.php?f=13&t=64838";
+$docs_url = "https://www.pgdp.net/wiki/DP_Official_Documentation:PP_and_PPV/Post-Processing_Workbench";
+
 // Load an (optional) configuration file
 if(is_file("config.php")) {
     include("config.php");
@@ -77,27 +82,37 @@ HEAD;
 // always closed properly.
 function output_footer($addl_links=[])
 {
+    global $docs_url, $help_url;
+
     // prepend a return to the main page
     if(basename($_SERVER["PHP_SELF"]) != "index.php")
     {
         $addl_links = array_merge(["index.php" => "MAIN PAGE"], $addl_links);
     }
 
-    $links = [];
-    foreach($addl_links as $url => $name)
-    {
-        $links[] = "<a style='font-size: 70%' href='$url'>$name</a>";
+    function make_links($addl_links) {
+        $links = [];
+        foreach($addl_links as $url => $name)
+        {
+            $links[] = "<a style='font-size: 70%' href='$url'>$name</a>";
+        }
+        return join("&nbsp;|&nbsp;", $links);
     }
-    $links = join("&nbsp;|&nbsp;", $links);
+
+    $left_links = make_links($addl_links);
+    $right_links = make_links([
+        "https://github.com/DistributedProofreaders/ppwb" => "GITHUB",
+        $docs_url => "DOCS",
+        $help_url => "HELP",
+    ]);
 
     echo <<<FOOT
   <div id="footer">
     <hr style='border:none; border-bottom:1px solid silver;'>
     <table style='width: 100%'>
       <tr>
-        <td style='text-align: left'>$links</td>
-        <td style='text-align: right'>
-        <a style='font-size: 70%' href='mailto:rfrank@rfrank.net'>CONTACT</a></td>
+        <td style='text-align: left'>$left_links</td>
+        <td style='text-align: right'>$right_links</td>
       </tr>
     </table>
   </div>
