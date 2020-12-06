@@ -6,6 +6,7 @@ output_content();
 
 function output_content()
 {
+    global $docs_url, $help_url;
 echo <<<MENU
 <p>Welcome to the Post-Processing Workbench. Post Processors usually generate
 two formats for each book: text and HTML. This page provides links to
@@ -36,7 +37,7 @@ files. Follow these links for details and to access the programs:</p>
     <!-- <li><a href="http://validator.w3.org/checklink">W3C Link Checker</a></li> -->
   </ul>
 
-<p>Discussion forum is <a href='https://www.pgdp.net/phpBB3/viewtopic.php?f=13&t=64838'>here</a>.</p>
+<p><a href='$docs_url'>Documentation</a> and <a href='$help_url'>help</a> is available as well.</p>
 
 MENU;
 }
