@@ -1,6 +1,4 @@
 t
-bin/pptext
-bin/hebelist.txt
-bin/pphtml.py
-bin/scannos.txt
+bin/pptext/
+bin/pphtml/
 config.php
