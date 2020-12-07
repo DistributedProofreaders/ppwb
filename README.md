@@ -10,10 +10,20 @@ text analysis (see `pptext.php`), HTML analysis (see `pphtml.php`),
 "smart quote" processing (see `ppsmq.php`) and a file compare tool
 (see `ppcomp.php`).
 
-The following two external tools need to be downloaded and installed
-in the `bin/` directory:
-* [pptext](https://github.com/DistributedProofreaders/pptext)
-* [pphtml](https://github.com/DistributedProofreaders/pphtml)
+The following two external tools need to be installed in directories under
+`bin/`:
+* [pptext](https://github.com/DistributedProofreaders/pptext) in `bin/pptext/`
+* [pphtml](https://github.com/DistributedProofreaders/pphtml) in `bin/pphtml/`
+
+It's recommended that you clone those repos into `bin/` directly:
+
+```bash
+cd bin
+git clone https://github.com/DistributedProofreaders/pptext.git
+git clone https://github.com/DistributedProofreaders/pphtml.git
+```
+
+See the individual tools' README.md for their prerequisites.
 
 For ppcomp to work, `dwdiff` needs to be installed as well.
 

@@ -93,7 +93,7 @@ if ($gtarget_name) {
 
 // build the command
 $scommand = join(" ", [
-    "./bin/pptext",
+    "./bin/pptext/pptext",
     join(" ", $options),
     "-i " . escapeshellarg($target_name),
     "-o " . escapeshellarg($workdir)
