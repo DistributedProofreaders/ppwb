@@ -64,11 +64,12 @@ $command = join(" ", [
     "2>&1"
 ]);
 
-// echo $command;
-file_put_contents("$workdir/command.txt", $command);
+log_tool_action($workdir, "command", $command);
 
 // and finally, run pphtml
 $output = shell_exec($command);
+
+log_tool_action($workdir, "output", $output);
 
 // ----- display results -------------------------------------------
 
@@ -89,4 +90,3 @@ if ($reportok) {
     <tt>${output}</tt></p>
     </p>For more assistance, ask in the <a href='$help_url'>discussion topic</a> and include this identifier: ${upid}</p>";
 }
-

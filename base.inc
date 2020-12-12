@@ -197,6 +197,11 @@ function log_tool_access($tool, $upid)
     file_put_contents("$base_workdir/access.log", $s, FILE_APPEND);
 }
 
+function log_tool_action($workdir, $label, $message)
+{
+    file_put_contents("$workdir/messages.log", "$label: $message\n", FILE_APPEND);
+}
+
 class UploadError extends Exception {}
 
 function process_file_upload($formid, $workdir, $allowed_extensions=[])
@@ -261,6 +266,8 @@ function process_file_upload($formid, $workdir, $allowed_extensions=[])
         throw $e;
     }
 
+    log_tool_action($workdir, "uploaded file", $final_filepath);
+
     return $final_filepath;
 }
 
@@ -277,6 +284,7 @@ function ensure_utf8_file($filename) {
         );
         exec(escapeshellcmd($cmd), $ppf_output, $ppf_exitcode);
         rename($tmpfname, $filename);
+        log_tool_action(dirname($filename), "UTF-8 conversion", "$filename converted from ISO-8859-1");
         return true;
     }
     return false;
