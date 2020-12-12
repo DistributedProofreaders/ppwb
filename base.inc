@@ -243,6 +243,9 @@ function process_file_upload($formid, $workdir, $allowed_extensions=[])
         if ($av_retval == 1) {
             throw new UploadError("file rejected by AV scanner");
         }
+        if ($av_retval != 0) {
+            throw new UploadError("error running AV scanner");
+        }
 
         // was a file uploaded?
         if ($_FILES[$formid]['size'] == 0) {
