@@ -23,13 +23,11 @@ log_tool_access("pptext", $upid);
 // ----- user has option of uploading a Latin-1 file -------------------
 
 // main file
-if(ensure_utf8_file($target_name)) {
-    file_put_contents("$workdir/converted-main.txt", "text file converted from ISO-8859\n");
-}
+ensure_utf8_file($target_name);
 
 // good words file
-if ($gtarget_name && ensure_utf8_file($gtarget_name)) {
-    file_put_contents("$workdir/converted-gwf.txt", "good words file converted from ISO-8859\n");
+if ($gtarget_name) {
+    ensure_utf8_file($gtarget_name);
 }
 
 // ----- process user options ------------------------------------------
@@ -104,11 +102,12 @@ $command = join(" ", [
     "2>&1"
 ]);
 
-// echo $command;
-file_put_contents("$workdir/command.txt", $command);
+log_tool_action($workdir, "command", $command);
 
 // and finally, run pptext
 $output = shell_exec($command);
+
+log_tool_action($workdir, "output", $output);
 
 // ----- display results -------------------------------------------
 
@@ -133,4 +132,3 @@ if ($reportok) {
     <tt>${output}</tt></p>
     </p>For more assistance, ask in the <a href='$help_url'>discussion topic</a> and include this identifier: ${upid}</p>";
 }
-
