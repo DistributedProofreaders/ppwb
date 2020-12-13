@@ -12,6 +12,12 @@ body,html {
 	font-family: cutenotes;
 }
 
+.alert {
+	text-align: center;
+	color: red;
+	margin-bottom: 0.5em;
+}
+
 body {
 	min-width:500px;
 	max-width:700px;

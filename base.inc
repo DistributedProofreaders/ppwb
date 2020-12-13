@@ -40,6 +40,10 @@ $maint_ips = [];
 global $maint_days_ago;
 $maint_days_ago = 14;
 
+// If defined, $alert_message will be shown on all pages.
+global $alert_message;
+$alert_message = "";
+
 // Load an (optional) configuration file
 if(is_file("config.php")) {
     include("config.php");
@@ -57,6 +61,8 @@ function exception_handler($exception)
 // Output valid HTML page header
 function output_header($header="", $addl_links=[], $js="")
 {
+    global $alert_message;
+
     if($header)
     {
         $title = "PP Workbench: $header";
@@ -79,6 +85,7 @@ function output_header($header="", $addl_links=[], $js="")
     <script>$js</script>
   </head>
   <body>
+  <div class="alert">$alert_message</div>
   <div id="header" class='hsty'>$header</div>
 	<hr style='border:none; border-bottom:1px solid silver;'>  
 HEAD;
