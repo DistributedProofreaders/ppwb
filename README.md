@@ -1,7 +1,7 @@
 # Post Processor Workbench
 
-This is a set of tools created by @asylumcs used in the final stage of ebook
-production: post-processing.
+ppwb is a set of tools used in post-processing, the final stage of ebook
+production.
 
 The workbench is a web front-end written in PHP that performs a variety
 of post-processing activities by calling out to external programs.
