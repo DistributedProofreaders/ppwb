@@ -84,6 +84,7 @@ if (file_exists("$workdir/result.html")) {
 if ($reportok) {
     echo "Left click to view. Right click to download.</p>";
 } else {
+    $output = nl2br($output);
     echo "<p>Whoops! Something went wrong and no output was generated.
     The error message was<br/><br/>
     <tt>${output}</tt></p>

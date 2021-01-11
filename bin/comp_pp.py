@@ -219,8 +219,11 @@ class SourceFile(object):
                                       if parser.error_log[0].type != 513]
 
         if len(self.parser_errlog):
-            raise SyntaxError("Parsing errors in document: " +
-                              os.path.basename(name))
+            errors = []
+            for entry in parser.error_log:
+                errors.append(f"{entry.type_name} near line {entry.line}: {entry.message}")
+            raise SyntaxError(f"Parsing errors in document {os.path.basename(name)}: \n"
+                + "\n".join(errors))
 
         self.tree = tree.getroottree()
         self.text = text.splitlines()
@@ -1610,12 +1613,15 @@ def main():
     args = parser.parse_args()
 
     x = CompPP(args)
-    if args.simple_html:
-        x.simple_html()
-    else:
-        _, html_content, fn1, fn2 = x.do_process()
-
-        output_html(args, html_content, fn1, fn2)
+    try:
+        if args.simple_html:
+            x.simple_html()
+        else:
+            _, html_content, fn1, fn2 = x.do_process()
+            output_html(args, html_content, fn1, fn2)
+    except SyntaxError as exception:
+        print(exception)
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
