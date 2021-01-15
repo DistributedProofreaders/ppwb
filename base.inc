@@ -265,11 +265,6 @@ function process_file_upload($formid, $workdir, $allowed_extensions=[])
                 sprintf("file must have a %s extension", join(" or ", $allowed_extensions))
             );
         }
-
-        // is it small enough?
-        if ($file_size > 31457280) {
-            throw new UploadError("file size must be less than 30 MB");
-        }
     } catch(Exception $e) {
         unlink($final_filepath);
         rmdir($workdir);
