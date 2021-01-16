@@ -57,18 +57,13 @@ $scommand = join(" ", [
     escapeshellarg($target_name2)
 ]);
 
-$command = join(" ", [
-    escapeshellcmd($scommand),
-    " > ",
-    escapeshellarg("$workdir/result.html"),
-    "2>&1"
-]);
+$command = escapeshellcmd($scommand);
 
 log_tool_action($workdir, "command", $command);
 
-$output = shell_exec($command);
+$exit_code = run_command($command, $output, $error);
 
-log_tool_action($workdir, "output", $output);
+log_tool_action($workdir, "error", $error);
 
 // ----- display results -------------------------------------------
 
@@ -77,9 +72,10 @@ output_header("ppcomp Results");
 $reportok = false;
 
 echo "<p>";
-if (file_exists("$workdir/result.html")) {
-   echo "results available: <a href='$workurl/result.html'>here</a>.<br/>";
-   $reportok = true;
+if($exit_code == 0) {
+    file_put_contents("$workdir/result.html", $output);
+    echo "results available: <a href='$workurl/result.html'>here</a>.<br/>";
+    $reportok = true;
 }
 if ($reportok) {
     echo "Left click to view. Right click to download.</p>";
