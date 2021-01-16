@@ -6,6 +6,7 @@ output_content();
 
 function output_content()
 {
+    $max_upload_size = ini_get("upload_max_filesize");
     global $docs_url, $help_url;
 echo <<<MENU
 <p>Welcome to the Post-Processing Workbench. Post Processors usually generate
@@ -26,8 +27,7 @@ files. Follow these links for details and to access the programs:</p>
     <li><a href='./ppcomp.php'>ppcomp</a> to compare two files, text or HTML mixed</li>
 </ul>
 
-<p>
-
+<p><i>The maximum upload size for this system is $max_upload_size.</i></p>
 
 <p>Please remember to also run these tests:</p>
   <ul style='margin-top:0'>
