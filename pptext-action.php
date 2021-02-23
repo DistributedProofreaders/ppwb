@@ -91,6 +91,7 @@ if ($gtarget_name) {
 
 // build the command
 $scommand = join(" ", [
+    "nice",
     "./bin/pptext/pptext",
     join(" ", $options),
     "-i " . escapeshellarg($target_name),
