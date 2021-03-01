@@ -31,6 +31,9 @@ echo <<<MENU
   to protect them. The process is the same as in the previous paragraph.
   For HTML, there is an added step to replace all "∮" with single quotes and
   all "∯" with double quotes to restore the HTML tags.</p>
+  
+  <p>Please note that all HTML tags must begin and end on a single line for this to work—the beginning &lt; must be in the same row with the &gt;.
+  Otherwise the quote marks will be converted to curly quotes which will cause problems with the HTML.</p>
 
 <form target="_blank" action="ppsmq-action.php" method="POST" enctype="multipart/form-data">
 <table>
