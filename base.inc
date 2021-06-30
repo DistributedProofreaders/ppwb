@@ -194,9 +194,14 @@ function log_tool_access($tool, $upid)
     // Decode JSON response:
     $api_result = json_decode($json, true);
 
-    // from: https://ipstack.com/documentation
-    $city = $api_result['city'];
-    $country = $api_result['country_name'];
+    if($api_result) {
+        // from: https://ipstack.com/documentation
+        $city = $api_result['city'] ?? "Not available";
+        $country = $api_result['country_name'] ?? "Not available";
+    } else {
+        $city = "Not available";
+        $country = "Not available";
+    }
 
     $s = sprintf("%s %6s %s %s [%s, %s]\n",
         date('Y-m-d H:i:s'), $tool, $upid, $ip, $city, $country
