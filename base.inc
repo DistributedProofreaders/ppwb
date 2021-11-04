@@ -177,35 +177,9 @@ function log_tool_access($tool, $upid)
 
     // make a record of this attempted run ---
     // format is:
-    //    2019-03-31 12:46:44 pptext r5ca0b6b499bec \
-    //    67.161.200.103 [Littleton, United States]
-
+    //    2019-03-31 12:46:44 pptext r5ca0b6b499bec 67.161.200.103
     $ip = getUserIP();
-    $access_key = 'f00ad0e10a4ebe4ec5cb3ffd6c1dc4c8';
-
-    // Initialize CURL:
-    $ch = curl_init("http://api.ipstack.com/$ip?access_key=$access_key");
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    // Store the data:
-    $json = curl_exec($ch);
-    curl_close($ch);
-
-    // Decode JSON response:
-    $api_result = json_decode($json, true);
-
-    if($api_result) {
-        // from: https://ipstack.com/documentation
-        $city = $api_result['city'] ?? "Not available";
-        $country = $api_result['country_name'] ?? "Not available";
-    } else {
-        $city = "Not available";
-        $country = "Not available";
-    }
-
-    $s = sprintf("%s %6s %s %s [%s, %s]\n",
-        date('Y-m-d H:i:s'), $tool, $upid, $ip, $city, $country
-    );
+    $s = sprintf("%s %6s %s %s\n", date('Y-m-d H:i:s'), $tool, $upid, $ip);
     file_put_contents("$base_workdir/access.log", $s, FILE_APPEND);
 }
 
