@@ -139,6 +139,8 @@ class SourceFile(object):
             parser = etree.XMLParser(dtd_validation=True)
         if any(["DTD HTML" in x for x in header]):
             parser = etree.HTMLParser()
+        if any(["DOCTYPE html" in x for x in header]):
+            parser = etree.HTMLParser()
 
         if parser is None:
             raise SyntaxError("No parser found for that type of document: " +
