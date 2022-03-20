@@ -14,6 +14,7 @@ The following two external tools need to be installed in directories under
 `bin/`:
 * [pptext](https://github.com/DistributedProofreaders/pptext) in `bin/pptext/`
 * [pphtml](https://github.com/DistributedProofreaders/pphtml) in `bin/pphtml/`
+* [ppcomp](https://github.com/DistributedProofreaders/ppcomp) in `bin/ppcomp/`
 
 It's recommended that you clone those repos into `bin/` directly:
 
@@ -21,6 +22,7 @@ It's recommended that you clone those repos into `bin/` directly:
 cd bin
 git clone https://github.com/DistributedProofreaders/pptext.git
 git clone https://github.com/DistributedProofreaders/pphtml.git
+git clone https://github.com/DistributedProofreaders/ppcomp.git
 ```
 
 See the individual tools' README.md for their prerequisites.
