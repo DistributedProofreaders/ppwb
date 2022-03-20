@@ -16,7 +16,7 @@ $target_name2 = process_file_upload("userfile2", $workdir);
 $options = [];
 
 // list of available boolean options; these are checkboxes on the page
-// and the names map directly to the comp_pp.py args
+// and the names map directly to the ppcomp.py args
 $available_boolean_options = [
     'ignore-format',
     'suppress-footnote-tags',
@@ -52,7 +52,7 @@ log_tool_access("ppcomp", $upid);
 
 $scommand = join(" ", [
     $python_runner,
-    "./bin/comp_pp.py",
+    "./bin/ppcomp/ppcomp/ppcomp.py",
     join(" ", $options),
     escapeshellarg($target_name1),
     escapeshellarg($target_name2)

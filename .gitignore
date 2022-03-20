@@ -1,4 +1,5 @@
 t
 bin/pptext/
 bin/pphtml/
+bin/ppcomp/
 config.php
