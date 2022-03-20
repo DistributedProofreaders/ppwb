@@ -29,6 +29,7 @@ $available_boolean_options = [
     'regroup-split-words',
     'css-greek-title-plus',
     'css-add-illustration',
+    'css-add-sidenote',
     'css-no-default',
     'without-html-header'
 ];
