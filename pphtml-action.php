@@ -29,12 +29,16 @@ else {
 
 $fileList1 = glob("$workdir/*.htm");
 $fileList2 = glob("$workdir/*.html");
+$fileList3 = glob("$workdir/*.xhtml");
 $user_htmlfile = "";
 if (count($fileList1) == 1) {
     $user_htmlfile = $fileList1[0];
 }
 if (count($fileList2) == 1) {
     $user_htmlfile = $fileList2[0];
+}
+if (count($fileList3) == 1) {
+    $user_htmlfile = $fileList3[0];
 }
 if ($user_htmlfile == "") {
     echo "could not determine HTML source file name";
