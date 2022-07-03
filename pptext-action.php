@@ -90,17 +90,13 @@ if ($gtarget_name) {
 // ----- run the pptext command ----------------------------------------
 
 // build the command
-$scommand = join(" ", [
+$command = join(" ", [
     "nice",
     "./bin/pptext/pptext",
     join(" ", $options),
     "-i " . escapeshellarg($target_name),
-    "-o " . escapeshellarg($workdir)
-]);
-
-$command = join(" ", [
-    escapeshellcmd($scommand),
-    "2>&1"
+    "-o " . escapeshellarg($workdir),
+    "2>&1",
 ]);
 
 log_tool_action($workdir, "command", $command);

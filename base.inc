@@ -224,7 +224,7 @@ function process_file_upload($formid, $workdir, $allowed_extensions=[])
         // does it pass the anti-virus tests?
         $av_test_result = array();
         $av_retval = 0;
-        $cmd = "/usr/bin/clamdscan '" . escapeshellcmd($final_filepath) . "'";
+        $cmd = "/usr/bin/clamdscan " . escapeshellarg($final_filepath);
         exec($cmd, $av_test_result, $av_retval);
         if ($av_retval == 1) {
             throw new UploadError("file rejected by AV scanner");
@@ -266,7 +266,7 @@ function ensure_utf8_file($filename) {
         $cmd = sprintf("iconv -f ISO_8859-1 -t UTF-8 -o %s %s",
             escapeshellarg($tmpfname), escapeshellarg($filename)
         );
-        exec(escapeshellcmd($cmd), $ppf_output, $ppf_exitcode);
+        exec($cmd, $ppf_output, $ppf_exitcode);
         rename($tmpfname, $filename);
         log_tool_action(dirname($filename), "UTF-8 conversion", "$filename converted from ISO-8859-1");
         return true;

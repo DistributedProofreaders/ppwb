@@ -50,15 +50,13 @@ log_tool_access("ppcomp", $upid);
 
 // ----- run the ppcomp command ----------------------------------------
 
-$scommand = join(" ", [
+$command = join(" ", [
     $python_runner,
     "./bin/ppcomp/ppcomp/ppcomp.py",
     join(" ", $options),
     escapeshellarg($target_name1),
     escapeshellarg($target_name2)
 ]);
-
-$command = escapeshellcmd($scommand);
 
 log_tool_action($workdir, "command", $command);
 
