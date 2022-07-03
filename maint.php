@@ -25,12 +25,11 @@ foreach(new DirectoryIterator($base_workdir) as $dir) {
     if($dir->getMTime() < $maint_cutoff) {
         echo "Deleting " . $dir->getFilename() . "\n";
 
-        $scommand = join(" ", [
+        $command = join(" ", [
             "rm",
             "-rf",
             escapeshellarg("$base_workdir/" . $dir->getFilename())
         ]);
-        $command = escapeshellcmd($scommand);
 
         // echo "$command\n";
         shell_exec($command);

@@ -55,17 +55,13 @@ if(isset($_POST['ver']) && $_POST['ver'] == 'Yes') {
 // ----- run the pphtml command ----------------------------------------
 
 // build the command
-$scommand = join(" ", [
+$command = join(" ", [
     $python_runner,
     "./bin/pphtml/pphtml.py",
     join(" ", $options),
     "-i " . escapeshellarg($user_htmlfile),
-    "-o " . escapeshellarg("$workdir/report.html")
-]);
-
-$command = join(" ", [
-    escapeshellcmd($scommand),
-    "2>&1"
+    "-o " . escapeshellarg("$workdir/report.html"),
+    "2>&1",
 ]);
 
 log_tool_action($workdir, "command", $command);
