@@ -6,6 +6,46 @@ output_content();
 
 function output_content()
 {
+    // available dictionaries installed on the server
+    $dictionaries = [
+        "en" => [
+            "en" => "English",
+            "en_US" => "English (US)",
+            "en_GB" => "English (GB)",
+            "en_CA" => "English (CA)",
+        ],
+        "af" => "Afrikaans",
+        "da" => "Danish",
+        "nl" => "Dutch",
+        "eo" => "Esperanto",
+        "fr" => "French",
+        "gl" => "Galician",
+        "de" => [
+            "de" => "German",
+            "de-alt" => "Alt. German",
+        ],
+        "grc" => "Greek",
+        "it" => "Italian",
+        "la" => "Latin",
+        "pt" => "Portuguese",
+        "ro" => "Romanian",
+        "es" => "Spanish",
+    ];
+
+    // build checkboxes
+    $dictionary_html = "";
+    foreach ($dictionaries as $code => $language) {
+        if (!is_array($language)) {
+            $language = [$code => $language];
+        }
+        $dictionary_html .= "<tr>";
+        foreach($language as $code => $locale_name) {
+            $checked = ($code == "en") ? "checked" : "";
+            $dictionary_html .= "<td align='right' style='padding-left:30px'>$locale_name: <input type='checkbox' name='wlangs[]' value='$code' autocomplete='off' $checked/></td>";
+        }
+        $dictionary_html .= "</tr>";
+    }
+
 echo <<<MENU
 
 <p>This page provides a consolidated pptext program used to check books before
@@ -51,22 +91,8 @@ Left click to view or right click the link to download the results.</p>
 
     <div>Select wordlist language(s)<br />
       <table style='margin-left: 50px;'>
-      <tr>
-      <td align='right' style='padding-left:30px'>English: <input type="checkbox" checked="yes" name="wlangs[]" value="en" autocomplete=off /></td>
-      <td align='right' style='padding-left:30px'>English (US): <input type="checkbox" name="wlangs[]" value="en_US" autocomplete=off /></td>
-      <td align='right' style='padding-left:30px'>English (GB): <input type="checkbox" name="wlangs[]" value="en_GB" autocomplete=off /></td>
-      <td align='right' style='padding-left:30px'>English (CA): <input type="checkbox" name="wlangs[]" value="en_CA" autocomplete=off /></td>
-      </tr>
-      <tr>
-      <td align='right' style='padding-left:30px'>French: <input type="checkbox" name="wlangs[]" value="fr" autocomplete=off /></td>
-      <td align='right' style='padding-left:30px'>German: <input type="checkbox" name="wlangs[]" value="de" autocomplete=off /></td>
-      <td align='right' style='padding-left:30px'>Alt. German: <input type="checkbox" name="wlangs[]" value="de-alt" autocomplete=off /></td>
-      <td align='right' style='padding-left:30px'>Italian: <input type="checkbox" name="wlangs[]" value="it" autocomplete=off /></td>     
-      </tr>
-      <tr>
-      <td align='right' style='padding-left:30px'>Spanish: <input type="checkbox" name="wlangs[]" value="es" autocomplete=off /></td>
-      </tr>
-    </table>
+      $dictionary_html
+      </table>
     </div>
 
     <br/>
