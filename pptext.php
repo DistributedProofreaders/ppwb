@@ -41,7 +41,7 @@ function output_content()
         $dictionary_html .= "<tr>";
         foreach($language as $code => $locale_name) {
             $checked = ($code == "en") ? "checked" : "";
-            $dictionary_html .= "<td align='right' style='padding-left:30px'>$locale_name: <input type='checkbox' name='wlangs[]' value='$code' autocomplete='off' $checked/></td>";
+            $dictionary_html .= "<td align='right' style='padding-left:30px'>$locale_name: <input type='checkbox' name='wlangs[]' value='$code' $checked></td>";
         }
         $dictionary_html .= "</tr>";
     }
@@ -81,54 +81,55 @@ Left click to view or right click the link to download the results.</p>
     <table>
       <tr>
           <td style='text-align:right'><label for='userfile'>User text file </label></td>
-          <td><input type="file" name="userfile" autocomplete=off /></td>
+          <td><input type="file" name="userfile" id="userfile"></td>
       </tr>
-      </tr>
+      <tr>
           <td style='text-align:right'><label for='goodfile'>Good words file (optional)</label></td>
-          <td><input type="file" name="goodfile" autocomplete=off /></td>
+          <td><input type="file" name="goodfile" id="goodfile"></td>
       </tr>
     </table>
 
-    <div>Select wordlist language(s)<br />
+    <div>Select wordlist language(s)<br>
       <table style='margin-left: 50px;'>
       $dictionary_html
       </table>
     </div>
 
-    <br/>
+    <br>
 
-<div>Select/unselect Tests<br />
-    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name='rat" value="Yes" id='rat' autocomplete="off" class="chk_boxes">
-    <label for="rat">run all tests</label><br/>
+    <div>Select/unselect Tests<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rat" value="Yes" id='rat' class="chk_boxes">
+    <label for="rat">run all tests</label><br>
 
-    <hr style='border:none; border-bottom:1px solid silver; width:10%; float:left; margin-left:24px;' /><br />
+    <hr style='border:none; border-bottom:1px solid silver; width:10%; float:left; margin-left:24px;'><br>
 
-    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rspl" value="Yes" id="rspl" autocomplete="off" class="chk_boxes1">
-    <label for="rspl">run spellcheck</label><br/>    
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rspl" value="Yes" id="rspl" class="chk_boxes1">
+    <label for="rspl">run spellcheck</label><br>
 
-    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="redi" value="Yes" id="redi" autocomplete="off" class="chk_boxes1">
-    <label for="redi">run edit distance check</label><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="redi" value="Yes" id="redi" class="chk_boxes1">
+    <label for="redi">run edit distance check</label><br>
 
-    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rtxt" value="Yes" id="rtxt" autocomplete="off" class="tchk chk_boxes1 chk_t">
-    <label for="rtxt">run text checks</label><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rtxt" value="Yes" id="rtxt" class="tchk chk_boxes1 chk_t">
+    <label for="rtxt">run text checks</label><br>
 
-    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rthc" value="Yes" id="rthc" autocomplete="off" class="tchks chk_boxes1 chk_t1">
-    <label for="rthc">&nbsp;&nbsp;&nbsp;&nbsp;run hyphen consistency</label><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rthc" value="Yes" id="rthc" class="tchks chk_boxes1 chk_t1">
+    <label for="rthc">&nbsp;&nbsp;&nbsp;&nbsp;run hyphen consistency</label><br>
 
-    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rhsc" value="Yes" id="rhsc" autocomplete="off" class="tchks chk_boxes1 chk_t1">
-    <label for="rhsc">&nbsp;&nbsp;&nbsp;&nbsp;run hyphen-space consistency</label><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rhsc" value="Yes" id="rhsc" class="tchks chk_boxes1 chk_t1">
+    <label for="rhsc">&nbsp;&nbsp;&nbsp;&nbsp;run hyphen-space consistency</label><br>
 
-    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rjee" value="Yes" id="rjee" autocomplete="off" class="chk_boxes1">
-    <label for="sqc">run jeebies check</label><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rjee" value="Yes" id="rjee" class="chk_boxes1">
+    <label for="rjee">run jeebies check</label><br>
 
-    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rsqc" value="Yes" id="rsqc" autocomplete="off" class="chk_boxes1">
-    <label for="rsqc">run smart quote check</label><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rsqc" value="Yes" id="rsqc" class="chk_boxes1">
+    <label for="rsqc">run smart quote check</label><br>
+    </div>
 
-    <br/>
-    <input type="checkbox" name="ver" value="Yes" id="ver" autocomplete="off">
-    <label for="ver">verbose operation</label><br/>
+    <br>
+    <input type="checkbox" name="ver" value="Yes" id="ver">
+    <label for="ver">verbose operation</label><br>
 
-    <div style='margin-top:1em; margin-bottom:0em;'><input type="submit" value="Submit" name="upload"/></div>
+    <div style='margin-top:1em; margin-bottom:0em;'><input type="submit" value="Submit" name="upload"></div>
 
 </form>
 MENU;

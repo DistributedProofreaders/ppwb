@@ -25,16 +25,16 @@ test will report these as [FAIL] duplicate targets.</p>
 
 <form target="_blank" action="pphtml-action.php" method="POST" enctype="multipart/form-data">
 
-<input type="checkbox" name="ver" value="Yes" id="ver" autocomplete="off">
-<label for="ver">verbose operation</label><br/>
+<input type="checkbox" name="ver" value="Yes" id="ver">
+<label for="ver">verbose operation</label><br>
 
 <table>
 <tr>
     <td style='text-align:right'><label for='userfile'>User zip file (HTML+images)</label></td>
-    <td><input type="file" name="userfile" autocomplete=off /></td>
+    <td><input type="file" name="userfile" id="userfile"></td>
 </tr>
 </table>
-<div style='margin-top:1em; margin-bottom:0em;'><input type="submit" value="Submit" name="upload"/></div>
+<div style='margin-top:1em; margin-bottom:0em;'><input type="submit" value="Submit" name="upload"></div>
 </form>
 
 MENU;

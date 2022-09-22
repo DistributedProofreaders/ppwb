@@ -79,14 +79,14 @@ $reportok = false;
 
 echo "<p>";
 if (file_exists("$workdir/report.html")) {
-   echo "results available: <a href='$workurl/report.html'>here</a>.<br/>";
+   echo "results available: <a href='$workurl/report.html'>here</a>.<br>";
    $reportok = true;
 }
 if ($reportok) {
     echo "Left click to view. Right click to download.</p>";
 } else {
     echo "<p>Whoops! Something went wrong and no output was generated.
-    The error message was<br/><br/>
+    The error message was<br><br>
     <tt>${output}</tt></p>
     </p>For more assistance, ask in the <a href='$help_url'>discussion topic</a> and include this identifier: ${upid}</p>";
 }
