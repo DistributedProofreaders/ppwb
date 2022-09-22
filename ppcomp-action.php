@@ -73,7 +73,7 @@ $reportok = false;
 echo "<p>";
 if($exit_code == 0) {
     file_put_contents("$workdir/result.html", $output);
-    echo "results available: <a href='$workurl/result.html'>here</a>.<br/>";
+    echo "results available: <a href='$workurl/result.html'>here</a>.<br>";
     $reportok = true;
 }
 if ($reportok) {
@@ -81,7 +81,7 @@ if ($reportok) {
 } else {
     $output = nl2br($output);
     echo "<p>Whoops! Something went wrong and no output was generated.
-    The error message was<br/><br/>
+    The error message was<br><br>
     <tt>${output}</tt></p>
     </p>For more assistance, ask in the <a href='$help_url'>discussion topic</a> and include this identifier: ${upid}</p>";
 }

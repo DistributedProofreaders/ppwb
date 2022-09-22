@@ -41,10 +41,10 @@ echo <<<MENU
 <table>
   <tr>
           <td style='text-align:right'><label for='userfile'>User text file </label></td>
-          <td><input type="file" name="userfile" autocomplete=off /></td>
+          <td><input type="file" name="userfile" id="userfile"></td>
   </tr>
 </table>
-<div style='margin-top:1em; margin-bottom:0em;'><input type="submit" value="Submit" name="upload"/></div>
+<div style='margin-top:1em; margin-bottom:0em;'><input type="submit" value="Submit" name="upload"></div>
 </form>
 
 MENU;
