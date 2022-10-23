@@ -30,21 +30,21 @@ or views the results file.</p>
 <div>Options for transforming an HTML file:</div>
 
 <input type="checkbox" name="css-add-illustration" value="No" id="css-add-illustration">
-<label for="css-add-illustration">add [Illustration ] tag</label><br>
+<label for="css-add-illustration">Add [Illustration ] tag</label><br>
 
 <input type="checkbox" name="css-add-sidenote" value="No" id="css-add-sidenote">
-<label for="css-add-sidenote">add [Sidenote: ...]</label><br>
+<label for="css-add-sidenote">Add [Sidenote: ...]</label><br>
 
 <input type="checkbox" name="css-greek-title-plus" value="No" id="css-greek-title-plus">
-<label for="css-greek-title-plus">use greek transliteration in title attribute</label><br>
+<label for="css-greek-title-plus">Use greek transliteration in title attribute</label><br>
 
 <input type="checkbox" name="suppress-nbsp-num" value="No" id="suppress-nbsp-num">
-<label for="suppress-nbsp-num">Suppress non-breakable spaces between numbers</label><br>
+<label for="Suppress-nbsp-num">Suppress non-breakable spaces between numbers</label><br>
 
 <input type="checkbox" name="ignore-0-space" value="No" id="ignore-0-space">
-<label for="ignore-0-space">suppress zero width space (U+200b)</label><br>
+<label for="ignore-0-space">Suppress zero width space (U+200b)</label><br>
 
-<input type="checkbox" name=css-smcap" value="No" id="css-smcap">
+<input type="checkbox" name="css-smcap" value="No" id="css-smcap">
 <label for="css-smcap">Convert small caps to uppercase</label><br>
 
 <!--
