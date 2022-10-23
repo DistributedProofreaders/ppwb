@@ -40,6 +40,10 @@ foreach($available_boolean_options as $option) {
     }
 }
 
+if(isset($_POST['css-smcap'])){
+    $options[] = "--css-smcap U";
+}
+
 if(isset($_POST['txt-cleanup-type'])){
     $options[] = "--txt-cleanup-type " . escapeshellarg($_POST['txt-cleanup-type']);
 }

@@ -44,6 +44,9 @@ or views the results file.</p>
 <input type="checkbox" name="ignore-0-space" value="No" id="ignore-0-space">
 <label for="ignore-0-space">suppress zero width space (U+200b)</label><br>
 
+<input type="checkbox" name=css-smcap" value="No" id="css-smcap">
+<label for="css-smcap">Convert small caps to uppercase</label><br>
+
 <!--
 <input type="checkbox" name="bold-replace" value="No" id="bold-replace">
 <label for="bold-replace">replace &lt;b>&lt;/b> markup with "="</label><br>
@@ -102,8 +105,7 @@ or views the results file.</p>
 <p>Note: The ppcomp program program was originally written as the standalone
 program comp_pp.py by bibimbop at PGDP as part of his
 <a href='https://pptools.tangledhelix.com'>PPTOOLS</a> program.
-It is used as part of the PP Workbench with permission. 
+It is used as part of the PP Workbench with permission.
 </p>
 MENU;
 }
-
