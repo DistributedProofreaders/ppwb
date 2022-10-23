@@ -39,7 +39,7 @@ or views the results file.</p>
 <label for="css-greek-title-plus">Use greek transliteration in title attribute</label><br>
 
 <input type="checkbox" name="suppress-nbsp-num" value="No" id="suppress-nbsp-num">
-<label for="Suppress-nbsp-num">Suppress non-breakable spaces between numbers</label><br>
+<label for="suppress-nbsp-num">Suppress non-breakable spaces between numbers</label><br>
 
 <input type="checkbox" name="ignore-0-space" value="No" id="ignore-0-space">
 <label for="ignore-0-space">Suppress zero width space (U+200b)</label><br>
