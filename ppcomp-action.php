@@ -25,6 +25,7 @@ $available_boolean_options = [
     'extract-footnotes',
     'ignore-0-space',
     'suppress-nbsp-num',
+    'suppress-word-join',
     'suppress-proofers-notes',
     'regroup-split-words',
     'css-greek-title-plus',

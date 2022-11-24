@@ -41,6 +41,9 @@ or views the results file.</p>
 <input type="checkbox" name="suppress-nbsp-num" value="No" id="suppress-nbsp-num">
 <label for="suppress-nbsp-num">Suppress non-breakable spaces between numbers</label><br>
 
+<input type="checkbox" name="suppress-word-join" value="No" id="suppress-word-join">
+<label for="suppress-word-join">Suppress word join (NoBreak) (U+2060)</label><br>
+
 <input type="checkbox" name="ignore-0-space" value="No" id="ignore-0-space">
 <label for="ignore-0-space">Suppress zero width space (U+200b)</label><br>
 
