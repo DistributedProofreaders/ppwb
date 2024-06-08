@@ -23,7 +23,7 @@ foreach(new DirectoryIterator($base_workdir) as $dir) {
     }
 
     if($dir->getMTime() < $maint_cutoff) {
-        echo "Deleting " . $dir->getFilename() . "\n";
+        // echo "Deleting " . $dir->getFilename() . "\n";
 
         $command = join(" ", [
             "rm",
@@ -32,7 +32,12 @@ foreach(new DirectoryIterator($base_workdir) as $dir) {
         ]);
 
         // echo "$command\n";
-        shell_exec($command);
+        $output = null;
+        $result_code = null;
+        exec($command, $output, $result_code);
+        if ($result_code != 0) {
+            echo "Error deleting " . $dir->getFilename() . ": $output\n";
+        }
     }
 }
 
