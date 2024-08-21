@@ -29,6 +29,10 @@ $base_workurl = "./t";
 global $python_runner;
 $python_runner = "python3";
 
+// If set, uploads will be run through the following anti-virus scanner
+global $av_scanner;
+$av_scanner = "";
+
 // URLs for help and documentation links.
 global $help_url, $docs_url;
 $help_url = "https://www.pgdp.net/phpBB3/viewtopic.php?f=13&t=64838";
@@ -196,6 +200,8 @@ class UploadError extends Exception {}
 
 function process_file_upload($formid, $workdir, $allowed_extensions=[])
 {
+    global $av_scanner;
+
     if(!isset($_FILES[$formid]) || !$_FILES[$formid]["name"]) {
         throw new UploadError("No file was uploaded");
     }
@@ -226,15 +232,17 @@ function process_file_upload($formid, $workdir, $allowed_extensions=[])
     // begin a series of validation tests
     try {
         // does it pass the anti-virus tests?
-        $av_test_result = array();
-        $av_retval = 0;
-        $cmd = "/usr/bin/clamdscan " . escapeshellarg($final_filepath);
-        exec($cmd, $av_test_result, $av_retval);
-        if ($av_retval == 1) {
-            throw new UploadError("file rejected by AV scanner");
-        }
-        if ($av_retval != 0) {
-            throw new UploadError("error running AV scanner");
+        if (file_exists($av_scanner)) {
+            $av_test_result = array();
+            $av_retval = 0;
+            $cmd = "$av_scanner " . escapeshellarg($final_filepath);
+            exec($cmd, $av_test_result, $av_retval);
+            if ($av_retval == 1) {
+                throw new UploadError("file rejected by AV scanner");
+            }
+            if ($av_retval != 0) {
+                throw new UploadError("error running AV scanner");
+            }
         }
 
         // was a file uploaded?
