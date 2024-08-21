@@ -57,7 +57,7 @@ log_tool_access("ppcomp", $upid);
 
 $command = join(" ", [
     $python_runner,
-    "./bin/ppcomp/ppcomp/ppcomp.py",
+    "$base_codedir/bin/ppcomp/ppcomp/ppcomp.py",
     join(" ", $options),
     escapeshellarg($target_name1),
     escapeshellarg($target_name2)

@@ -92,7 +92,7 @@ if ($gtarget_name) {
 // build the command
 $command = join(" ", [
     "nice",
-    "./bin/pptext/pptext",
+    "$base_codedir/bin/pptext/pptext",
     join(" ", $options),
     "-i " . escapeshellarg($target_name),
     "-o " . escapeshellarg($workdir),

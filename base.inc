@@ -11,6 +11,10 @@ set_exception_handler('exception_handler');
 // Define some global configuration values. These can be overridden in
 // an optional configuration file (config.php).
 
+// Determine the repo base for using the external tools
+global $base_codedir;
+$base_codedir = dirname($_SERVER['SCRIPT_FILENAME']);
+
 // $base_workdir is where files are uploaded and where results are stored.
 // It must be writeable by the webserver and also needs to be accessible by
 // URL ($base_workurl). $base_workurl can be a relative or absolute URL to
