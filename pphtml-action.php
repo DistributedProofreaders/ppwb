@@ -57,7 +57,7 @@ if(isset($_POST['ver']) && $_POST['ver'] == 'Yes') {
 // build the command
 $command = join(" ", [
     $python_runner,
-    "./bin/pphtml/pphtml.py",
+    "$base_codedir/bin/pphtml/pphtml.py",
     join(" ", $options),
     "-i " . escapeshellarg($user_htmlfile),
     "-o " . escapeshellarg("$workdir/report.html"),

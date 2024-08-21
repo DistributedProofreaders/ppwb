@@ -17,7 +17,7 @@ log_tool_access("ppsmq", $upid);
 // build the command
 $command = join(" ", [
     $python_runner,
-    "./bin/ppsmq.py",
+    "$base_codedir/bin/ppsmq.py",
     "-i " . escapeshellarg($target_name),
     "-o " . escapeshellarg("$workdir/report.txt"),
     "2>&1",
