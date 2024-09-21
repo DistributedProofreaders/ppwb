@@ -126,6 +126,6 @@ if ($reportok) {
 } else {
     echo "<p>Whoops! Something went wrong and no output was generated.
     The error message was<br><br>
-    <tt>${output}</tt></p>
-    </p>For more assistance, ask in the <a href='$help_url'>discussion topic</a> and include this identifier: ${upid}</p>";
+    <tt>$output</tt></p>
+    </p>For more assistance, ask in the <a href='$help_url'>discussion topic</a> and include this identifier: $upid</p>";
 }
