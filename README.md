@@ -34,21 +34,13 @@ For ppcomp to work, `dwdiff` needs to be installed as well.
 The external python programs require various python libraries to be installed
 in order to work. Consult with each of the tools' `requirements.txt` files
 for more details. These can be installed in the system's python3 installation
-or in a virtualenv dedicated for ppwb.
+(not recommended) or in a virtualenv dedicated for ppwb (preferred).
 
-If using a virtualenv, you will need to create a python proxy script to
-initialize the environment. For example:
-
-```bash
-#!/bin/bash
-
-VENV=/path/to/virtualenv/basedir/
-source $VENV/bin/activate
-
-python $*
+If using a virtualenv, you need to update `$python_runner` in `config.php` to
+call it like this:
+```php
+$python_runner = "env VIRTUAL_ENV=/path/to/venv PATH=/path/to/venv/bin/python3";
 ```
-
-Make this script executable and set it as your `$python_runner` in `config.php`.
 
 Ensure that the web server can access the virtualenv. virtualenvs created
 in `~/.local` may need to have the permissions updated (o+x) to allow the
