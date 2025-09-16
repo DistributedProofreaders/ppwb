@@ -45,3 +45,36 @@ $python_runner = "env VIRTUAL_ENV=/path/to/venv PATH=/path/to/venv/bin/python3";
 Ensure that the web server can access the virtualenv. virtualenvs created
 in `~/.local` may need to have the permissions updated (o+x) to allow the
 web server sufficient permissions.
+
+## Using Docker for development / testing
+
+For convenience, you can run ppwb, ppcomp, pphtml, and pptext in a container.
+The included Docker Compose configuration will run a PPWB instance on localhost,
+using the code on your computer (outside the container) mounted into the
+container.
+
+See the above instructions about installing ppcomp, pptext, pphtml under the
+"bin" directory. Depending what you're working on, you can clone the repository
+URLs above, or substitute your own forked URLs.
+
+Once they're in place, build the image:
+
+    docker compose build
+
+And then bring up the service:
+
+    # add -d if you prefer to run in the background
+    docker compose up
+
+Visit http://localhost:8080 in your browser. (The port can be changed by editing
+docker-compose.yml, if necessary.)
+
+### When changes take effect in Docker
+
+Changes in pphtml and ppcomp should go live as soon as you save the file.
+
+Changing code from the ppwb project itself will require a rebuild of the image
+(and a restart of the service). This includes ppsmq.
+
+Changing the Go code for pptext will take effect with a restart of the service
+(no rebuild of Docker required). The startup sequence rebuilds pptext.
