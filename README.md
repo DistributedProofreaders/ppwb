@@ -69,12 +69,16 @@ And then bring up the service:
 Visit http://localhost:8080 in your browser. (The port can be changed by editing
 docker-compose.yml, if necessary.)
 
-### When changes take effect in Docker
+### When changes take effect
 
-Changes in pphtml and ppcomp should go live as soon as you save the file.
+To change pptext Go code, you'll need to restart services.
+(The startup script rebuilds pptext.)
 
-Changing code from the ppwb project itself will require a rebuild of the image
-(and a restart of the service). This includes ppsmq.
+    docker compose restart
 
-Changing the Go code for pptext will take effect with a restart of the service
-(no rebuild of Docker required). The startup sequence rebuilds pptext.
+If you make changes to `Dockerfile` or `docker-entrypoint.sh`, rebuild the
+image and restart.
+
+To change the port of the web server, update `docker-compose.yml` and restart.
+
+All other changes should take effect as soon as you save the file.
