@@ -63,6 +63,9 @@ or views the results file.</p>
 
 <input type="checkbox" name="suppress-illustration-tags" value="No" id="suppress-illustration-tags">
 <label for="suppress-illustration-tags">Suppress "[Illustration:" marks</label><br>
+
+<input type="checkbox" name="suppress-sidenote-tags" value="No" id="suppress-sidenote-tags">
+<label for="suppress-sidenote-tags">Suppress "[Sidenote:" marks</label><br>
 <br>
 
 <div>If comparing with a file from the rounds</div>
