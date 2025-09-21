@@ -21,6 +21,7 @@ $available_boolean_options = [
     'ignore-format',
     'suppress-footnote-tags',
     'suppress-illustration-tags',
+    'suppress-sidenote-tags',
     'ignore-case',
     'extract-footnotes',
     'ignore-0-space',
