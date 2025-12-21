@@ -50,6 +50,10 @@ if(isset($_POST['txt-cleanup-type'])){
     $options[] = "--txt-cleanup-type " . escapeshellarg($_POST['txt-cleanup-type']);
 }
 
+if(isset($_POST['use-custom-transform-css']) && isset($_POST['css'])){
+    $options[] = "--css " . escapeshellarg($_POST['css']);
+}
+
 // ----- no errors. proceed ----------------------------------------
 
 log_tool_access("ppcomp", $upid);

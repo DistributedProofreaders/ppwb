@@ -66,6 +66,16 @@ or views the results file.</p>
 
 <input type="checkbox" name="suppress-sidenote-tags" value="No" id="suppress-sidenote-tags">
 <label for="suppress-sidenote-tags">Suppress "[Sidenote:" marks</label><br>
+
+<input type="checkbox" name="use-custom-transform-css" value="No" id="use-custom-transform-css">
+<label for="use-custom-transform-css">Use custom transform CSS</label><br>
+<textarea id="css" name="css" rows="8" cols="60">
+/* Add brackets around footnote anchor */
+/*   .fnanchor:before { content: "["; }
+     .fnanchor:after { content: "]"; } */
+
+/* .tb {display: none;} */
+</textarea><br>
 <br>
 
 <div>If comparing with a file from the rounds</div>
@@ -113,5 +123,18 @@ program comp_pp.py by bibimbop at PGDP as part of his
 <a href='https://pptools.tangledhelix.com'>PPTOOLS</a> program.
 It is used as part of the PP Workbench with permission.
 </p>
+
+<script>
+function customTransformCssShowHide(e) {
+  if ($("#use-custom-transform-css").is(":checked")) {
+    $("#css").show();
+  } else {
+    $("#css").hide();
+  }
+}
+customTransformCssShowHide(false);
+$("#use-custom-transform-css").on("click", customTransformCssShowHide);
+</script>
+
 MENU;
 }
