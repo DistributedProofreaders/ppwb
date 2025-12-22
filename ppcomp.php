@@ -67,6 +67,9 @@ or views the results file.</p>
 <input type="checkbox" name="suppress-sidenote-tags" value="No" id="suppress-sidenote-tags">
 <label for="suppress-sidenote-tags">Suppress "[Sidenote:" marks</label><br>
 
+<input type="checkbox" name="css-no-default" value="No" id="css-no-default">
+<label for="css-no-default">Do not use default transformation CSS</label><br>
+
 <input type="checkbox" name="use-custom-transform-css" value="No" id="use-custom-transform-css">
 <label for="use-custom-transform-css">Use custom transform CSS</label><br>
 <textarea id="css" name="css" rows="8" cols="60">
