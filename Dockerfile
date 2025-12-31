@@ -12,7 +12,7 @@ RUN apt-get update \
 RUN mkdir /venv \
     && python3 -m venv /venv \
     && /venv/bin/pip3 install \
-        tinycss cssselect lxml html5lib pytest Pillow regex
+        tinycss cssselect lxml html5lib pytest Pillow regex roman
 RUN pecl install zip \
     && echo "extension=zip" >> $PHP_INI_DIR/php.ini-development \
     && mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
