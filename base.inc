@@ -151,10 +151,16 @@ function init_workdir()
 {
     global $base_workdir, $base_workurl;
 
-    $upid = uniqid('r');
+    // ensure the workdir is unique
+    while (true) {
+        $upid = uniqid('r', true);
 
-    $workdir = "$base_workdir/$upid";
-    mkdir($workdir, 0755);
+        $workdir = "$base_workdir/$upid";
+        if (! is_dir($workdir) && @mkdir($workdir, 0755)) {
+            break;
+        }
+        usleep(1);
+    }
 
     $workurl = "$base_workurl/$upid";
 
@@ -257,8 +263,10 @@ function process_file_upload($formid, $workdir, $allowed_extensions=[])
             );
         }
     } catch(Exception $e) {
-        unlink($final_filepath);
-        rmdir($workdir);
+        // do a best-effort of cleaning this up -- the maint.php cron
+        // will catch anything we miss
+        @unlink($final_filepath);
+        @rmdir($workdir);
         throw $e;
     }
 
