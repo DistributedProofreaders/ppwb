@@ -122,8 +122,7 @@ or views the results file.</p>
 
 
 <p>Note: The ppcomp program program was originally written as the standalone
-program comp_pp.py by bibimbop at PGDP as part of his
-<a href='https://pptools.tangledhelix.com'>PPTOOLS</a> program.
+program comp_pp.py by bibimbop at PGDP as part of his PPTOOLS program.
 It is used as part of the PP Workbench with permission.
 </p>
 
