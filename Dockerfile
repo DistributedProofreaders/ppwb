@@ -14,8 +14,10 @@ RUN mkdir /venv \
     && /venv/bin/pip3 install \
         tinycss cssselect lxml html5lib pytest Pillow regex roman
 RUN pecl install zip \
-    && echo "extension=zip" >> $PHP_INI_DIR/php.ini-development \
-    && mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
+    && sed -e 's/\(post_max_size\s*=\s*\)[0-9]*M/\150M/' \
+           -e 's/\(upload_max_filesize\s*=\s*\)[0-9]*M/\150M/' \
+           $PHP_INI_DIR/php.ini-development > $PHP_INI_DIR/php.ini \
+    && echo "extension=zip" >> $PHP_INI_DIR/php.ini
 
 COPY docker-entrypoint.sh /
 RUN chmod 755 /docker-entrypoint.sh
