@@ -46,11 +46,6 @@ if(isset($_POST['wlangs'])){
     }
 }
 
-if (count($wlangs) == 0) {
-    echo "Please select at least one language. Exiting.";
-    exit(1);
-}
-
 $options[] = "-a " . escapeshellarg(join(",", $wlangs));
 
 // aggregate user-selected tests
@@ -76,6 +71,12 @@ foreach($available_tests as $key => $val) {
     }
 }
 $options[] = "-t " . escapeshellarg(join("", $utests));
+
+// check we have a language if they want to run spellcheck
+if (isset($utests["rspl"]) && count($wlangs) == 0) {
+    echo "Please select at least one language or deselect 'run spellcheck'. Exiting.";
+    exit(1);
+}
 
 // see if user has ticked the "verbose" box
 if(isset($_POST['ver']) && $_POST['ver'] == 'Yes') {
