@@ -32,27 +32,6 @@ if ($gtarget_name) {
 
 // ----- process user options ------------------------------------------
 
-$options = [];
-
-// get the user's chosen language(s) 
-$wlangs = [];
-$isEnglish = false;
-if(isset($_POST['wlangs'])){
-    foreach($_POST['wlangs'] as $alang){
-        $wlangs[] = $alang;
-        if ($alang == "en" || $alang == "en_GB" || $alang == "en_US" || $alang == "en_CA" ) {
-            $isEnglish = true;
-        }        
-    }
-}
-
-if (count($wlangs) == 0) {
-    echo "Please select at least one language. Exiting.";
-    exit(1);
-}
-
-$options[] = "-a " . escapeshellarg(join(",", $wlangs));
-
 // aggregate user-selected tests
 $available_tests = [
     "rat" => "a",
@@ -62,12 +41,10 @@ $available_tests = [
     "rthc" => "1",
     "rhsc" => "2",
     "rsqc" => "q",
+    "rjee" => "j",
 ];
 
-// only allow jeebies if an "English" language is selected
-if ($isEnglish) {
-    $available_tests["rjee"] = "j";
-}
+// get user inputs & validate combinations
 
 $utests = [];
 foreach($available_tests as $key => $val) {
@@ -75,11 +52,35 @@ foreach($available_tests as $key => $val) {
         $utests[] = $val;
     }
 }
-$options[] = "-t " . escapeshellarg(join("", $utests));
+
+// get the user's chosen language(s)
+$wlangs = $_POST['wlangs'] ?? [];
 
 // see if user has ticked the "verbose" box
-if(isset($_POST['ver']) && $_POST['ver'] == 'Yes') {
+$verbose = isset($_POST['ver']) && $_POST['ver'] == 'Yes';
+
+// skip spellcheck if dependent tests weren't selected
+$skip_aspell = !in_array("a", $utests) && !in_array("s", $utests) && !in_array("e", $utests);
+
+if (!$skip_aspell && count($wlangs) == 0) {
+    echo "Please select at least one language when using spellcheck or edit distance check. Exiting.";
+    exit(1);
+}
+
+$options = [];
+
+$options[] = "-a " . escapeshellarg(join(",", $wlangs));
+
+$options[] = "-t " . escapeshellarg(join("", $utests));
+
+// user wants verbose output
+if ($verbose) {
     $options[] = " -v ";
+}
+
+// if spellcheck wasn't requested, explicitly skip it with -s
+if ($skip_aspell) {
+    $options[] = " -s ";
 }
 
 // include good words file if present

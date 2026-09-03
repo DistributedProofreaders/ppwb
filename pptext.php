@@ -89,7 +89,7 @@ Left click to view or right click the link to download the results.</p>
       </tr>
     </table>
 
-    <div>Select wordlist language(s)<br>
+    <div>Select project language(s)<br>
       <table style='margin-left: 50px;'>
       $dictionary_html
       </table>
@@ -103,11 +103,11 @@ Left click to view or right click the link to download the results.</p>
 
     <hr style='border:none; border-bottom:1px solid silver; width:10%; float:left; margin-left:24px;'><br>
 
-    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rspl" value="Yes" id="rspl" class="chk_boxes1">
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rspl" value="Yes" id="rspl" class="chk_boxes1 chk_aspell">
     <label for="rspl">run spellcheck</label><br>
 
-    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="redi" value="Yes" id="redi" class="chk_boxes1">
-    <label for="redi">run edit distance check</label><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="redi" value="Yes" id="redi" class="chk_boxes1 chk_aspell1">
+    <label for="redi">&nbsp;&nbsp;&nbsp;&nbsp;run edit distance check</label><br>
 
     &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rtxt" value="Yes" id="rtxt" class="tchk chk_boxes1 chk_t">
     <label for="rtxt">run text checks</label><br>
@@ -119,7 +119,7 @@ Left click to view or right click the link to download the results.</p>
     <label for="rhsc">&nbsp;&nbsp;&nbsp;&nbsp;run hyphen-space consistency</label><br>
 
     &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rjee" value="Yes" id="rjee" class="chk_boxes1">
-    <label for="rjee">run jeebies check</label><br>
+    <label for="rjee">run jeebies check</label> (only runs for English projects)<br>
 
     &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="rsqc" value="Yes" id="rsqc" class="chk_boxes1">
     <label for="rsqc">run smart quote check</label><br>
@@ -144,6 +144,12 @@ function get_js()
         });
         $('.chk_t').click(function(){
             $('.chk_t1').prop('checked',this.checked);
+        });
+        $('.chk_boxes1').click(function(){
+            $('.chk_boxes').prop('checked',false);
+        });
+        $('.chk_aspell').click(function(){
+            $('.chk_aspell1').prop('checked',this.checked);
         });
         $('.chk_boxes1').click(function(){
             $('.chk_boxes').prop('checked',false);
