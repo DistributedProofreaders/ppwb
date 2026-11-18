@@ -31,7 +31,7 @@ test will report these as [FAIL] duplicate targets.</p>
 <table>
 <tr>
     <td style='text-align:right'><label for='userfile'>User zip file (HTML+images)</label></td>
-    <td><input type="file" name="userfile" id="userfile"></td>
+    <td><input type="file" name="userfile" id="userfile" accept=".zip"></td>
 </tr>
 </table>
 <div style='margin-top:1em; margin-bottom:0em;'><input type="submit" value="Submit" name="upload"></div>
