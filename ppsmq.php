@@ -41,7 +41,7 @@ echo <<<MENU
 <table>
   <tr>
           <td style='text-align:right'><label for='userfile'>User text file </label></td>
-          <td><input type="file" name="userfile" id="userfile"></td>
+          <td><input type="file" name="userfile" id="userfile" accept=".txt,.html,.htm"></td>
   </tr>
 </table>
 <div style='margin-top:1em; margin-bottom:0em;'><input type="submit" value="Submit" name="upload"></div>

@@ -2,14 +2,15 @@
 require_once("base.inc");
 
 list($workdir, $workurl, $upid) = init_workdir();
+$extensions = ["txt", "html", "htm"]; // allowed file extensions
 
 // ----- process the first file ---------------------------------
 
-$target_name1 = process_file_upload("userfile1", $workdir);
+$target_name1 = process_file_upload("userfile1", $workdir, $extensions);
 
 // ----- process the second file ---------------------------------
 
-$target_name2 = process_file_upload("userfile2", $workdir);
+$target_name2 = process_file_upload("userfile2", $workdir, $extensions);
 
 // ----- process user options ---------------------------------------
 

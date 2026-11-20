@@ -2,7 +2,7 @@
 require_once("base.inc");
 
 list($workdir, $workurl, $upid) = init_workdir();
-$extensions = ["txt", "TXT"]; // allowed file extensions
+$extensions = ["txt"]; // allowed file extensions
 
 // ----- process the main project file ---------------------------------
 
