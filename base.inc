@@ -230,13 +230,20 @@ function process_file_upload($formid, $workdir, $allowed_extensions=[])
         throw new UploadError("Filename did not contain any valid characters");
     }
 
-    $final_filepath = "$workdir/$file_basename.$file_ext";
-    if(move_uploaded_file($file_tmp, $final_filepath) === FALSE) {
-        throw new UploadError("error moving uploaded file to working directory");
-    }
-
     // begin a series of validation tests
     try {
+        // do they claim it's an allowed type?
+        if ($allowed_extensions && in_array($file_ext, $allowed_extensions) === false) {
+            throw new UploadError(
+                sprintf("file must have a %s extension", join(" or ", $allowed_extensions))
+            );
+        }
+
+        $final_filepath = "$workdir/$file_basename.$file_ext";
+        if(move_uploaded_file($file_tmp, $final_filepath) === FALSE) {
+            throw new UploadError("error moving uploaded file to working directory");
+        }
+
         // does it pass the anti-virus tests?
         if (file_exists($av_scanner)) {
             $av_test_result = array();
@@ -254,13 +261,6 @@ function process_file_upload($formid, $workdir, $allowed_extensions=[])
         // was a file uploaded?
         if ($_FILES[$formid]['size'] == 0) {
             throw new UploadError("no file was uploaded");
-        }
-
-        // do they claim it's an allowed type?
-        if ($allowed_extensions && in_array($file_ext, $allowed_extensions) === false) {
-            throw new UploadError(
-                sprintf("file must have a %s extension", join(" or ", $allowed_extensions))
-            );
         }
     } catch(Exception $e) {
         // do a best-effort of cleaning this up -- the maint.php cron
