@@ -291,7 +291,6 @@ function cleanup_on_error($workdir, $target_name) {
     // will catch anything we miss
     @unlink($target_name);
     @rmdir($workdir);
-    throw $e;
 }
 
 // If a text file is ISO-8859 convert it to UTF-8
