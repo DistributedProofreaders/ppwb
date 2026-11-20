@@ -263,16 +263,35 @@ function process_file_upload($formid, $workdir, $allowed_extensions=[])
             throw new UploadError("no file was uploaded");
         }
     } catch(Exception $e) {
-        // do a best-effort of cleaning this up -- the maint.php cron
-        // will catch anything we miss
-        @unlink($final_filepath);
-        @rmdir($workdir);
+        cleanup_on_error($workdir, $final_filepath)
         throw $e;
     }
 
     log_tool_action($workdir, "uploaded file", $final_filepath);
 
     return $final_filepath;
+}
+
+function validate_zip_contents($opened_archive, $workdir, $target_name) {
+    $forbiddenFiles = ['php', 'py', 'exe', 'dll'];
+    for ($i = 0; $i < $opened_archive->numFiles; $i++) {
+        $fileName = $opened_archive->getNameIndex($i);
+
+        $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        if (in_array($ext, $forbiddenFiles)) {
+            $opened_archive->close();
+            cleanup_on_error($workdir, $target_name);
+            throw new UploadError("Disallowed file found in zip: $fileName");
+        }
+    }
+}
+
+function cleanup_on_error($workdir, $target_name) {
+    // do a best-effort of cleaning this up -- the maint.php cron
+    // will catch anything we miss
+    @unlink($target_name);
+    @rmdir($workdir);
+    throw $e;
 }
 
 // If a text file is ISO-8859 convert it to UTF-8

@@ -16,18 +16,8 @@ log_tool_access("pphtml", $upid);
 
 $zipArchive = new ZipArchive();
 $result = $zipArchive->open($target_name);
-$forbiddenFiles = ['php', 'py', 'exe', 'dll'];
 if ($result === TRUE) {
-    for ($i = 0; $i < $zip->numFiles; $i++) {
-        $fileName = $zip->getNameIndex($i);
-
-        $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-        if (in_array($ext, $forbiddenFiles)) {
-            print_r("Disallowed file found in zip: $fileName");
-            exit(1);
-        }
-    }
-
+    validate_zip_contents($zipArchive, $workdir, $target_name);
     $zipArchive->extractTo($workdir);
     $zipArchive->close();
 }
