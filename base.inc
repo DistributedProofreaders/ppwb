@@ -263,8 +263,7 @@ function process_file_upload($formid, $workdir, $allowed_extensions=[])
             throw new UploadError("no file was uploaded");
         }
     } catch(Exception $e) {
-        cleanup_on_error($workdir, $final_filepath)
-        throw $e;
+        cleanup_on_error($workdir, $final_filepath);
     }
 
     log_tool_action($workdir, "uploaded file", $final_filepath);
