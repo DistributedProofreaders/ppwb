@@ -270,6 +270,7 @@ function process_file_upload(string $formid, string $workdir, array $allowed_ext
         }
     } catch(Exception $e) {
         cleanup_on_error($workdir, $final_filepath);
+        throw new UploadError("Error encountered uploading file: " . $e->getMessage());
     }
 
     log_tool_action($workdir, "uploaded file", $final_filepath);
