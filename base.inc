@@ -272,7 +272,7 @@ function process_file_upload($formid, $workdir, $allowed_extensions=[])
 }
 
 function validate_zip_contents($opened_archive, $workdir, $target_name) {
-    $forbiddenFiles = ['par', 'php', 'phtml', 'py', 'exe', 'dll'];
+    $forbiddenFiles = ['phar', 'php', 'phtml', 'py', 'exe', 'dll'];
     for ($i = 0; $i < $opened_archive->numFiles; $i++) {
         $fileName = $opened_archive->getNameIndex($i);
 
