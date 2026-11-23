@@ -204,8 +204,11 @@ function log_tool_action($workdir, $label, $message)
 
 class UploadError extends Exception {}
 
+$forbidden_extensions = ['phar', 'php', 'phtml', 'py', 'exe', 'dll'];
+
 function process_file_upload(string $formid, string $workdir, array $allowed_extensions)
 {
+    global $forbidden_extensions;
     global $av_scanner;
 
     // ensure callers always pass in a list of allowed extensions
@@ -244,10 +247,15 @@ function process_file_upload(string $formid, string $workdir, array $allowed_ext
         }
 
         // do they claim it's an allowed type?
-        if ($allowed_extensions && in_array($file_ext, $allowed_extensions) === false) {
+        if (in_array($file_ext, $allowed_extensions) === false) {
             throw new UploadError(
                 sprintf("file must have a %s extension", join(" or ", $allowed_extensions))
             );
+        }
+
+        // just in case a caller includes one of the forbidden extensions as allowed
+        if (in_array($file_ext, $forbidden_extensions)) {
+            throw new UploadError("Disallowed file found in zip: $fileName");
         }
 
         // does it pass the anti-virus tests?
@@ -279,12 +287,13 @@ function process_file_upload(string $formid, string $workdir, array $allowed_ext
 }
 
 function validate_zip_contents($opened_archive, $workdir, $target_name) {
-    $forbiddenFiles = ['phar', 'php', 'phtml', 'py', 'exe', 'dll'];
+    global $forbidden_extensions;
+
     for ($i = 0; $i < $opened_archive->numFiles; $i++) {
         $fileName = $opened_archive->getNameIndex($i);
 
         $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-        if (in_array($ext, $forbiddenFiles)) {
+        if (in_array($ext, $forbidden_extensions)) {
             $opened_archive->close();
             cleanup_on_error($workdir, $target_name);
             throw new UploadError("Disallowed file found in zip: $fileName");
