@@ -36,7 +36,7 @@ foreach(new DirectoryIterator($base_workdir) as $dir) {
         $result_code = null;
         exec($command, $output, $result_code);
         if ($result_code != 0) {
-            echo "Error deleting " . $dir->getFilename() . ": $output\n";
+            echo "Error deleting " . $dir->getFilename() . ": " .join("\n", $output) . "\n";
         }
     }
 }
