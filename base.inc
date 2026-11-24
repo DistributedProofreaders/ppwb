@@ -61,13 +61,15 @@ if(is_file("config.php")) {
 //===========================================================================
 // Common functions used by many/all pages
 
-function exception_handler($exception)
+function exception_handler(Throwable $exception): void
 {
     echo "Error: " . htmlspecialchars($exception->getMessage());
 }
-
-// Output valid HTML page header
-function output_header($header="", $addl_links=[], $js="")
+/**
+ * Output valid HTML page header
+ * @param array<string, string> $addl_links
+ */
+function output_header(string $header = "", array $addl_links = [], string $js = ""): void
 {
     global $alert_message;
 
@@ -102,7 +104,8 @@ HEAD;
     register_shutdown_function('output_footer', $addl_links);
 }
 
-function make_footer_links($addl_links)
+/** @param array<string, string> $addl_links */
+function make_footer_links(array $addl_links): string
 {
     $links = [];
     foreach ($addl_links as $url => $name) {
@@ -111,10 +114,13 @@ function make_footer_links($addl_links)
     return join("&nbsp;|&nbsp;", $links);
 }
 
-// You should not call this function directly as it is registered as a
-// shutdown callback with output_header() to ensure that the HTML is
-// always closed properly.
-function output_footer($addl_links=[])
+/**
+ * You should not call this function directly as it is registered as a
+ * shutdown callback with output_header() to ensure that the HTML is
+ * always closed properly.
+ * @param array<string, string> $addl_links
+ */
+function output_footer(array $addl_links = []): void
 {
     global $docs_url, $help_url;
 
@@ -146,8 +152,11 @@ function output_footer($addl_links=[])
 FOOT;
 }
 
-// initialize a working directory to store uploaded and processed files
-function init_workdir()
+/**
+ * Initialize a working directory to store uploaded and processed files
+ * @return list{string, string, string}
+ */
+function init_workdir(): array
 {
     global $base_workdir, $base_workurl;
 
@@ -167,8 +176,8 @@ function init_workdir()
     return [$workdir, $workurl, $upid];
 }
 
-// get user's IP address
-function getUserIP()
+/**  get user's IP address */
+function getUserIP(): string
 {
     if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
         if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',') > 0) {
@@ -184,8 +193,8 @@ function getUserIP()
     }
 }
 
-// log tool access
-function log_tool_access($tool, $upid)
+/** log tool access */
+function log_tool_access(string $tool, string $upid): void
 {
     global $base_workdir;
 
@@ -197,7 +206,7 @@ function log_tool_access($tool, $upid)
     file_put_contents("$base_workdir/access.log", $s, FILE_APPEND);
 }
 
-function log_tool_action($workdir, $label, $message)
+function log_tool_action(string $workdir, string $label, string $message): void
 {
     file_put_contents("$workdir/messages.log", "$label: $message\n", FILE_APPEND);
 }
@@ -206,7 +215,8 @@ class UploadError extends Exception {}
 
 $forbidden_extensions = ['phar', 'php', 'phtml', 'py', 'exe', 'dll', '.pl', '.rb', '.cgi'];
 
-function process_file_upload(string $formid, string $workdir, array $allowed_extensions)
+/** @param string[] $allowed_extensions */
+function process_file_upload(string $formid, string $workdir, array $allowed_extensions = []): string
 {
     global $forbidden_extensions;
     global $av_scanner;
@@ -311,9 +321,12 @@ function cleanup_on_error(string $workdir, ?string $target_name): void {
     @rmdir($workdir);
 }
 
-// If a text file is ISO-8859 convert it to UTF-8
-// Returns true if a conversion was necessary, else false
-function ensure_utf8_file($filename) {
+/**
+ * If a text file is ISO-8859 convert it to UTF-8
+ * Returns true if a conversion was necessary, else false
+ */
+function ensure_utf8_file(string $filename): bool
+{
     $cmd = sprintf("file %s", escapeshellarg($filename));
     exec($cmd, $ppf_output, $ppf_exitcode);
     if (strpos($ppf_output[0], "ISO-8859") !== false) {
@@ -330,8 +343,11 @@ function ensure_utf8_file($filename) {
     return false;
 }
 
-// from https://stackoverflow.com/questions/2320608/php-stderr-after-exec
-function run_command($cmd, &$stdout=null, &$stderr=null) {
+/**
+ * from https://stackoverflow.com/questions/2320608/php-stderr-after-exec
+ */
+function run_command(string $cmd, string|false &$stdout, string|false &$stderr): int
+{
     $proc = proc_open($cmd, [
         1 => ['pipe','w'],
         2 => ['pipe','w'],

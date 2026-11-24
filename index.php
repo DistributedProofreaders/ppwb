@@ -4,7 +4,7 @@ require_once("base.inc");
 output_header();
 output_content();
 
-function output_content()
+function output_content(): void
 {
     $max_upload_size = ini_get("upload_max_filesize");
     global $docs_url, $help_url;

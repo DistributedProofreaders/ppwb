@@ -44,24 +44,17 @@ foreach(new DirectoryIterator($base_workdir) as $dir) {
 //---------------------------------------------------------------------------
 
 // function to determine if page requester is from localhost or in our OK list
-function requester_is_authorized()
+function requester_is_authorized(): bool
 {
     global $maint_ips;
 
-    if(php_sapi_name() == "cli")
+    if (php_sapi_name() == "cli")
     {
-        return FALSE;
+        return false;
     }
 
-    if($_SERVER['REMOTE_ADDR'] == '127.0.0.1' ||
+    return $_SERVER['REMOTE_ADDR'] == '127.0.0.1' ||
         $_SERVER['REMOTE_ADDR'] == $_SERVER['SERVER_ADDR'] ||
-        in_array($_SERVER['REMOTE_ADDR'], $maint_ips))
-    {
-        return TRUE;
-    }
-    else
-    {
-        return FALSE;
-    }
+        in_array($_SERVER['REMOTE_ADDR'], $maint_ips);
 }
 
