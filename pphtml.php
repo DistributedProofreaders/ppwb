@@ -4,7 +4,7 @@ require_once("base.inc");
 output_header("pphtml", ["techinfo-pphtml.php" => "TECH INFO"]);
 output_content();
 
-function output_content()
+function output_content(): void
 {
 echo <<<MENU
 

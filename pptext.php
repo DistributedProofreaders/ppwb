@@ -4,7 +4,7 @@ require_once("base.inc");
 output_header("pptext", ["techinfo-pptext.php" => "TECH INFO"], get_js());
 output_content();
 
-function output_content()
+function output_content(): void
 {
     // available dictionaries installed on the server
     $dictionaries = [
@@ -135,7 +135,7 @@ Left click to view or right click the link to download the results.</p>
 MENU;
 }
 
-function get_js()
+function get_js(): string
 {
     return <<<JS
     $(document).ready(function() {

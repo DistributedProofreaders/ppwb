@@ -4,7 +4,7 @@ require_once("base.inc");
 output_header("ppsmq", ["techinfo-ppsmq.php" => "TECH INFO"]);
 output_content();
 
-function output_content()
+function output_content(): void
 {
 echo <<<MENU
 
