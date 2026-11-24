@@ -204,7 +204,7 @@ function log_tool_action($workdir, $label, $message)
 
 class UploadError extends Exception {}
 
-$forbidden_extensions = ['phar', 'php', 'phtml', 'py', 'exe', 'dll'];
+$forbidden_extensions = ['phar', 'php', 'phtml', 'py', 'exe', 'dll', '.pl', '.rb', '.cgi'];
 
 function process_file_upload(string $formid, string $workdir, array $allowed_extensions)
 {
@@ -247,15 +247,15 @@ function process_file_upload(string $formid, string $workdir, array $allowed_ext
         }
 
         // do they claim it's an allowed type?
-        if (in_array($file_ext, $allowed_extensions) === false) {
+        if (in_array($file_ext, $allowed_extensions, strict: true) === false) {
             throw new UploadError(
                 sprintf("File must have a %s extension", join(" or ", $allowed_extensions))
             );
         }
 
         // just in case a caller includes one of the forbidden extensions as allowed
-        if (in_array($file_ext, $forbidden_extensions)) {
-            throw new UploadError("Disallowed file found in zip: $fileName");
+        if (in_array($file_ext, $forbidden_extensions, strict: true)) {
+            throw new UploadError("Disallowed file found in zip: $file_name");
         }
 
         // does it pass the anti-virus tests?
@@ -273,7 +273,7 @@ function process_file_upload(string $formid, string $workdir, array $allowed_ext
         }
 
         $final_filepath = "$workdir/$file_basename.$file_ext";
-        if(move_uploaded_file($file_tmp, $final_filepath) === FALSE) {
+        if(move_uploaded_file($file_tmp, $final_filepath) === false) {
             throw new UploadError("Error moving uploaded file to working directory");
         }
     } catch(Exception $e) {
@@ -286,7 +286,8 @@ function process_file_upload(string $formid, string $workdir, array $allowed_ext
     return $final_filepath;
 }
 
-function validate_zip_contents($opened_archive, $workdir, $target_name) {
+function validate_zip_contents(ZipArchive $opened_archive, string $workdir, string $target_name): void
+{
     global $forbidden_extensions;
 
     for ($i = 0; $i < $opened_archive->numFiles; $i++) {
@@ -301,7 +302,7 @@ function validate_zip_contents($opened_archive, $workdir, $target_name) {
     }
 }
 
-function cleanup_on_error($workdir, $target_name) {
+function cleanup_on_error(string $workdir, ?string $target_name): void {
     // do a best-effort of cleaning this up -- the maint.php cron
     // will catch anything we miss
     if ($target_name && is_file($target_name)) {
