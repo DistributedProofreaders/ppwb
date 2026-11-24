@@ -3,3 +3,10 @@ bin/pptext/
 bin/pphtml/
 bin/ppcomp/
 config.php
+
+# Ignore dev tooling
+vendor
+
+# PHP CS Fixer configuration
+/.php-cs-fixer.cache
+/.php-cs-fixer.php
