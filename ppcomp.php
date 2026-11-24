@@ -111,7 +111,7 @@ or views the results file.</p>
 </tr>
 <tr>
     <td style='text-align:right'><label for='userfile2'>file2:</label></td>
-    <td><input type="file" name="userfile2" id="userfile2" accept=".htl,.html,.txt"></td>
+    <td><input type="file" name="userfile2" id="userfile2" accept=".htm,.html,.txt"></td>
 </tr>
 </table>
 <div style='margin-top:1em; margin-bottom:0em;'><input type="submit" value="Submit" name="upload"></div>
