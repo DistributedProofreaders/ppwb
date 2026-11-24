@@ -14,7 +14,7 @@ parameters:
     tmpDir: .phpstan.cache
 
     # https://phpstan.org/user-guide/rule-levels
-    level: 5
+    level: 6
 
     ignoreErrors:
         - message: '#Variable .* might not be defined#'
