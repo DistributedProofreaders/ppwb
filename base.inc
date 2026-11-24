@@ -232,9 +232,9 @@ function process_file_upload(string $formid, string $workdir, array $allowed_ext
         // lowercase the extension
         $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
 
-        // was a file uploaded?
+        // was a non-zero sized file uploaded?
         if ($file_size == 0) {
-            throw new UploadError("no file was uploaded");
+            throw new UploadError("Empty file was uploaded");
         }
 
         // restrict basename to alphanumeric, -, or _ after replacing spaces
@@ -249,7 +249,7 @@ function process_file_upload(string $formid, string $workdir, array $allowed_ext
         // do they claim it's an allowed type?
         if (in_array($file_ext, $allowed_extensions) === false) {
             throw new UploadError(
-                sprintf("file must have a %s extension", join(" or ", $allowed_extensions))
+                sprintf("File must have a %s extension", join(" or ", $allowed_extensions))
             );
         }
 
@@ -265,16 +265,16 @@ function process_file_upload(string $formid, string $workdir, array $allowed_ext
             $cmd = "$av_scanner " . escapeshellarg($file_tmp);
             exec($cmd, $av_test_result, $av_retval);
             if ($av_retval == 1) {
-                throw new UploadError("file rejected by AV scanner");
+                throw new UploadError("File rejected by AV scanner");
             }
             if ($av_retval != 0) {
-                throw new UploadError("error running AV scanner");
+                throw new UploadError("Error running AV scanner");
             }
         }
 
         $final_filepath = "$workdir/$file_basename.$file_ext";
         if(move_uploaded_file($file_tmp, $final_filepath) === FALSE) {
-            throw new UploadError("error moving uploaded file to working directory");
+            throw new UploadError("Error moving uploaded file to working directory");
         }
     } catch(Exception $e) {
         cleanup_on_error($workdir, $final_filepath);
