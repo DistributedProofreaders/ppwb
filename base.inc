@@ -102,6 +102,15 @@ HEAD;
     register_shutdown_function('output_footer', $addl_links);
 }
 
+function make_footer_links($addl_links)
+{
+    $links = [];
+    foreach ($addl_links as $url => $name) {
+        $links[] = "<a style='font-size: 70%' href='$url'>$name</a>";
+    }
+    return join("&nbsp;|&nbsp;", $links);
+}
+
 // You should not call this function directly as it is registered as a
 // shutdown callback with output_header() to ensure that the HTML is
 // always closed properly.
@@ -115,17 +124,8 @@ function output_footer($addl_links=[])
         $addl_links = array_merge(["index.php" => "MAIN PAGE"], $addl_links);
     }
 
-    function make_links($addl_links) {
-        $links = [];
-        foreach($addl_links as $url => $name)
-        {
-            $links[] = "<a style='font-size: 70%' href='$url'>$name</a>";
-        }
-        return join("&nbsp;|&nbsp;", $links);
-    }
-
-    $left_links = make_links($addl_links);
-    $right_links = make_links([
+    $left_links = make_footer_links($addl_links);
+    $right_links = make_footer_links([
         "https://github.com/DistributedProofreaders/ppwb" => "GITHUB",
         $docs_url => "DOCS",
         $help_url => "HELP",
