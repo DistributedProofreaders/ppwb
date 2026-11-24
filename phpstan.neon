@@ -1,0 +1,17 @@
+# https://phpstan.org/config-reference
+
+includes:
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+
+parameters:
+    fileExtensions:
+        - php
+        - inc
+    paths:
+        - .
+    excludePaths:
+        - vendor
+    tmpDir: .phpstan.cache
+
+    # https://phpstan.org/user-guide/rule-levels
+    level: 0
