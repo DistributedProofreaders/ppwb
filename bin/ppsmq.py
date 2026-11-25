@@ -22,7 +22,7 @@ class Ppsmq:
         self.flag_count = 0
 
     def fatal(self, message: str) -> None:
-        """display (fatal) error and exit"""
+        """Display (fatal) error and exit."""
         sys.stderr.write(f"fatal: {message}\n")
         sys.exit(1)
 
@@ -48,8 +48,7 @@ class Ppsmq:
             # if any tags span two or more lines, unwrap them and leave blank lines
             # so the line counter stays correct
             # for ppsmq, need to be able to restore the lines and indentation
-            i = 0
-            while i < len(self.wb):
+            for i in range(len(self.wb)):
                 try:
                     lbc = self.wb[i].count('<')
                     rbc = self.wb[i].count('>')
@@ -62,10 +61,9 @@ class Ppsmq:
                         consume += 1
                 except IndexError:
                     pass
-                i += 1
 
     def saveFile(self, outfile: str) -> None:
-        """save working buffer to specified outfile"""
+        """Save working buffer to specified outfile."""
         while self.wb[-1] == "":
             del self.wb[-1]
         with open(outfile, "w", encoding="UTF-8") as f:
@@ -83,7 +81,7 @@ class Ppsmq:
             f.write("".join(f"{t:s}\r\n" for t in self.wb))
 
     def protectTags(self) -> None:
-        for i, _ in enumerate(self.wb):
+        for i in range(len(self.wb)):
             while re.search("<[^>]*?'.*?>", self.wb[i]):
                 self.wb[i] = re.sub("(<[^>]*?)'(.*?>)", r"\1∮\2", self.wb[i])
             while re.search("<[^>]*?\".*?>", self.wb[i]):
@@ -91,10 +89,9 @@ class Ppsmq:
 
     def doubleQuotes(self) -> None:
         dqlevel = 0
-        for i, line in enumerate(self.wb):
-
+        for i in range(len(self.wb)):
             # expect dqlevel == 0 on an empty line unless next line starts with open quote
-            if line == "":
+            if self.wb[i] == "":
                 if dqlevel != 0 and ((i + 1) < len(self.wb)) and not self.wb[i+1].startswith('"'):
                     self.wb[i-1] += self.FLAG
                     self.flag_count += 1
@@ -121,14 +118,14 @@ class Ppsmq:
             "“ ",  # floating open quote
             " ”",  # floating close quote
         ]
-        for i, line in enumerate(self.wb):
+        for i in range(len(self.wb)):
             for rule in rules:
                 if re.search(rule, self.wb[i]):
                     self.wb[i] += self.FLAG
                     self.flag_count += 1
 
     def singleQuotesByList(self) -> None:
-        for i, _ in enumerate(self.wb):
+        for i in range(len(self.wb)):
             # case specific
             self.wb[i] = re.sub(r"'em\b", r"’em", self.wb[i])
             # case irrelevant
@@ -138,7 +135,7 @@ class Ppsmq:
                      ("'Twixt", "’Twixt"), ("'Til", "’Til"), ("'Scuse",
                                                               "’Scuse"), ("'Gainst ", "’Gainst "),
                      ("'Twon't", "’Twon’t")]
-            for x, w in enumerate(words):
+            for w in words:
                 t1 = f"{w[0]}\\b"
                 t2 = re.sub("'", "’", w[0])
                 self.wb[i] = re.sub(t1, t2, self.wb[i])
@@ -155,7 +152,7 @@ class Ppsmq:
             (r"' ", r"’ "),  # followed by a space
             (r"'”", r"’”"),  # followed by a double quote
         ]
-        for i, line in enumerate(self.wb):
+        for i in range(len(self.wb)):
             for search, replace in rules:
                 self.wb[i] = re.sub(search, replace, self.wb[i])
 
