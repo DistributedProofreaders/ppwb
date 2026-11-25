@@ -9,9 +9,6 @@
 import argparse
 import re
 import sys
-import string
-import os
-import codecs
 
 class Ppsmq(object):
 
