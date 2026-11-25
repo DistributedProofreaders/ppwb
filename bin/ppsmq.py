@@ -104,36 +104,28 @@ class Ppsmq:
             # replace straight with curly quotes
             while re.search('"', self.wb[i]):
                 if dqlevel == 0:
-                    self.wb[i] = re.sub('"', '“', self.wb[i], 1)
+                    self.wb[i] = re.sub('"', "“", self.wb[i], 1)
                     dqlevel += 1
                     continue
                 if dqlevel == 1:
-                    self.wb[i] = re.sub('"', '”', self.wb[i], 1)
+                    self.wb[i] = re.sub('"', "”", self.wb[i], 1)
                     dqlevel -= 1
                     continue
 
     def checkDouble(self) -> None:
+        rules = [
+            "^”",  # close quote at start of line
+            "“$",  # open quote at end of line
+            r"”\w",  # close quote followed by word char
+            r"\w“",  # open quote preceeded by word char
+            "“ ",  # floating open quote
+            " ”",  # floating close quote
+        ]
         for i, line in enumerate(self.wb):
-            if re.match("^”", self.wb[i]):  # wrong quote start of line
-                self.wb[i] += self.FLAG
-                self.flag_count += 1
-            if re.search("“$", self.wb[i]):  # wrong quote end of line
-                self.wb[i] += self.FLAG
-                self.flag_count += 1
-            # close quote followed by word char
-            if re.search(r"”\w", self.wb[i]):
-                self.wb[i] += self.FLAG
-                self.flag_count += 1
-            # open quote preceeded by word char
-            if re.search(r"\w“", self.wb[i]):
-                self.wb[i] += self.FLAG
-                self.flag_count += 1
-            if re.search("“ ", self.wb[i]):  # floating open quote
-                self.wb[i] += self.FLAG
-                self.flag_count += 1
-            if re.search(" ”", self.wb[i]):  # floating close quote
-                self.wb[i] += self.FLAG
-                self.flag_count += 1
+            for rule in rules:
+                if re.search(rule, self.wb[i]):
+                    self.wb[i] += self.FLAG
+                    self.flag_count += 1
 
     def singleQuotesByList(self) -> None:
         for i, _ in enumerate(self.wb):
@@ -155,19 +147,17 @@ class Ppsmq:
                 self.wb[i] = re.sub(t1, t2, self.wb[i])
 
     def singleQuotesByRule(self) -> None:
+        rules = [
+            (r"(\w)'(\w)", r"\1’\2"),  # letter-'-letter
+            (r"([\.,\w])'", r"\1’"),  # period, comma or letter followed by '
+            (r"(\w)'\.", r"\1’\."),  # letter-apostrophe-period
+            (r"'$", r"’"),  # at end of line
+            (r"' ", r"’ "),  # followed by a space
+            (r"'”", r"’”"),  # followed by a double quote
+        ]
         for i, line in enumerate(self.wb):
-            # letter-'-letter
-            self.wb[i] = re.sub(r"(\w)'(\w)", r"\1’\2", self.wb[i])
-            # period, comma or letter followed by '
-            self.wb[i] = re.sub(r"([\.,\w])'", r"\1’", self.wb[i])
-            # letter-apostrophe-period
-            self.wb[i] = re.sub(r"(\w)'\.", r"\1’\.", self.wb[i])
-            # at end of line
-            self.wb[i] = re.sub(r"'$", r"’", self.wb[i])
-            # followed by a space
-            self.wb[i] = re.sub(r"' ", r"’ ", self.wb[i])
-            # followed by a double quote
-            self.wb[i] = re.sub(r"'”", r"’”", self.wb[i])
+            for search, replace in rules:
+                self.wb[i] = re.sub(search, replace, self.wb[i])
 
     def run(self) -> None:
         self.loadFile(self.infile)
