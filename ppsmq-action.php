@@ -1,7 +1,7 @@
 <?php
 require_once("base.inc");
 
-list($workdir, $workurl, $upid) = init_workdir();
+[$workdir, $workurl, $upid] = init_workdir();
 $extensions = ["txt", "htm", "html"]; // allowed file extensions
 
 // ----- process the main project file ---------------------------------
@@ -38,8 +38,8 @@ $reportok = false;
 
 echo "<p>";
 if (file_exists("$workdir/report.txt")) {
-   echo "results available: <a href='$workurl/report.txt'>here</a>.<br>";
-   $reportok = true;
+    echo "results available: <a href='$workurl/report.txt'>here</a>.<br>";
+    $reportok = true;
 }
 if ($reportok) {
     echo "Left click to view. Right click to download.</p>";

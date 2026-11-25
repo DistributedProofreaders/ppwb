@@ -1,7 +1,7 @@
 <?php
 require_once("base.inc");
 
-list($workdir, $workurl, $upid) = init_workdir();
+[$workdir, $workurl, $upid] = init_workdir();
 $extensions = ["zip"]; // allowed file extensions
 
 // ----- process the main project file ---------------------------------
@@ -20,8 +20,7 @@ if ($result === true) {
     validate_zip_contents($zipArchive, $workdir, $target_name);
     $zipArchive->extractTo($workdir);
     $zipArchive->close();
-}
-else {
+} else {
     print_r("unable to unzip uploaded file");
     exit(1);
 }
@@ -43,13 +42,13 @@ if (count($fileList3) == 1) {
 }
 if ($user_htmlfile == "") {
     echo "could not determine HTML source file name";
-    exit(1);       
+    exit(1);
 }
 
 $options = [];
 
 // see if user has ticked the "verbose" box
-if(isset($_POST['ver']) && $_POST['ver'] == 'Yes') {
+if (isset($_POST['ver']) && $_POST['ver'] == 'Yes') {
     $options[] = "-v";
 }
 
@@ -80,8 +79,8 @@ $reportok = false;
 
 echo "<p>";
 if (file_exists("$workdir/report.html")) {
-   echo "results available: <a href='$workurl/report.html'>here</a>.<br>";
-   $reportok = true;
+    echo "results available: <a href='$workurl/report.html'>here</a>.<br>";
+    $reportok = true;
 }
 if ($reportok) {
     echo "Left click to view. Right click to download.</p>";

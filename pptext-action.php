@@ -1,7 +1,7 @@
 <?php
 require_once("base.inc");
 
-list($workdir, $workurl, $upid) = init_workdir();
+[$workdir, $workurl, $upid] = init_workdir();
 $extensions = ["txt"]; // allowed file extensions
 
 // ----- process the main project file ---------------------------------
@@ -47,8 +47,8 @@ $available_tests = [
 // get user inputs & validate combinations
 
 $utests = [];
-foreach($available_tests as $key => $val) {
-    if(isset($_POST[$key]) && $_POST[$key] == 'Yes') {
+foreach ($available_tests as $key => $val) {
+    if (isset($_POST[$key]) && $_POST[$key] == 'Yes') {
         $utests[] = $val;
     }
 }
@@ -115,12 +115,12 @@ $reportok = false;
 
 echo "<p>";
 if (file_exists("$workdir/report.html")) {
-   echo "results available: <a href='$workurl/report.html'>here</a>.<br>";
-   $reportok = true;
+    echo "results available: <a href='$workurl/report.html'>here</a>.<br>";
+    $reportok = true;
 }
 if (file_exists("$workdir/scanreport.txt")) {
-   echo "punctuation scan report: <a href='$workurl/scanreport.txt'>here</a>.<br>";
-   $reportok = true;
+    echo "punctuation scan report: <a href='$workurl/scanreport.txt'>here</a>.<br>";
+    $reportok = true;
 }
 if ($reportok) {
     echo "Left click to view. Right click to download.</p>";

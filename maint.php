@@ -9,26 +9,26 @@ require_once("base.inc");
 // This script ensures that only runs from localhost will succeed.
 
 // Reject calls not by localhost or other authorized callers
-if(!requester_is_authorized()) {
+if (!requester_is_authorized()) {
     die("You are not authorized to perform this request.\n");
 }
 
 // Walk through our workdir deleting directories that are older than
 // $maint_days_ago
-$maint_cutoff = time() - ($maint_days_ago * 60*60*24);
-foreach(new DirectoryIterator($base_workdir) as $dir) {
+$maint_cutoff = time() - ($maint_days_ago * 60 * 60 * 24);
+foreach (new DirectoryIterator($base_workdir) as $dir) {
     // skip any dot files or access.log
-    if($dir->isDot() || $dir->getFilename() == "access.log") {
+    if ($dir->isDot() || $dir->getFilename() == "access.log") {
         continue;
     }
 
-    if($dir->getMTime() < $maint_cutoff) {
+    if ($dir->getMTime() < $maint_cutoff) {
         // echo "Deleting " . $dir->getFilename() . "\n";
 
         $command = join(" ", [
             "rm",
             "-rf",
-            escapeshellarg("$base_workdir/" . $dir->getFilename())
+            escapeshellarg("$base_workdir/" . $dir->getFilename()),
         ]);
 
         // echo "$command\n";
@@ -48,8 +48,7 @@ function requester_is_authorized(): bool
 {
     global $maint_ips;
 
-    if (php_sapi_name() == "cli")
-    {
+    if (php_sapi_name() == "cli") {
         return false;
     }
 
@@ -57,4 +56,3 @@ function requester_is_authorized(): bool
         $_SERVER['REMOTE_ADDR'] == $_SERVER['SERVER_ADDR'] ||
         in_array($_SERVER['REMOTE_ADDR'], $maint_ips);
 }
-
