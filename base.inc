@@ -53,7 +53,7 @@ global $alert_message;
 $alert_message = "";
 
 // Load an (optional) configuration file
-if(is_file("config.php")) {
+if (is_file("config.php")) {
     include("config.php");
 }
 
@@ -73,32 +73,29 @@ function output_header(string $header = "", array $addl_links = [], string $js =
 {
     global $alert_message;
 
-    if($header)
-    {
+    if ($header) {
         $title = "PP Workbench: $header";
-    }
-    else
-    {
+    } else {
         $title = "Post-Processing Workbench";
         $header = "pp workbench";
     }
 
     echo <<<HEAD
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name=viewport content="width=device-width, initial-scale=1">
-    <title>$title</title>
-    <link rel="stylesheet" type="text/css" href="ppwb.css">
-    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script>$js</script>
-  </head>
-  <body>
-  <div class="alert">$alert_message</div>
-  <div id="header" class='hsty'>$header</div>
-	<hr style='border:none; border-bottom:1px solid silver;'>  
-HEAD;
+        <!doctype html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name=viewport content="width=device-width, initial-scale=1">
+            <title>$title</title>
+            <link rel="stylesheet" type="text/css" href="ppwb.css">
+            <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+            <script>$js</script>
+          </head>
+          <body>
+          <div class="alert">$alert_message</div>
+          <div id="header" class='hsty'>$header</div>
+            <hr style='border:none; border-bottom:1px solid silver;'>
+        HEAD;
 
     // Register a shutdown callback to always close out the page
     register_shutdown_function('output_footer', $addl_links);
@@ -125,8 +122,7 @@ function output_footer(array $addl_links = []): void
     global $docs_url, $help_url;
 
     // prepend a return to the main page
-    if(basename($_SERVER["PHP_SELF"]) != "index.php")
-    {
+    if (basename($_SERVER["PHP_SELF"]) != "index.php") {
         $addl_links = array_merge(["index.php" => "MAIN PAGE"], $addl_links);
     }
 
@@ -138,18 +134,18 @@ function output_footer(array $addl_links = []): void
     ]);
 
     echo <<<FOOT
-  <div id="footer">
-    <hr style='border:none; border-bottom:1px solid silver;'>
-    <table style='width: 100%'>
-      <tr>
-        <td style='text-align: left'>$left_links</td>
-        <td style='text-align: right'>$right_links</td>
-      </tr>
-    </table>
-  </div>
-  </body>
-</html>
-FOOT;
+          <div id="footer">
+            <hr style='border:none; border-bottom:1px solid silver;'>
+            <table style='width: 100%'>
+              <tr>
+                <td style='text-align: left'>$left_links</td>
+                <td style='text-align: right'>$right_links</td>
+              </tr>
+            </table>
+          </div>
+          </body>
+        </html>
+        FOOT;
 }
 
 /**
@@ -165,7 +161,7 @@ function init_workdir(): array
         $upid = uniqid('r', true);
 
         $workdir = "$base_workdir/$upid";
-        if (! is_dir($workdir) && @mkdir($workdir, 0755)) {
+        if (! is_dir($workdir) && @mkdir($workdir, 0o755)) {
             break;
         }
         usleep(1);
@@ -183,12 +179,10 @@ function getUserIP(): string
         if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',') > 0) {
             $addr = explode(",", $_SERVER['HTTP_X_FORWARDED_FOR']);
             return trim($addr[0]);
-        }
-        else {
+        } else {
             return $_SERVER['HTTP_X_FORWARDED_FOR'];
         }
-    }
-    else {
+    } else {
         return $_SERVER['REMOTE_ADDR'];
     }
 }
@@ -211,7 +205,9 @@ function log_tool_action(string $workdir, string $label, string $message): void
     file_put_contents("$workdir/messages.log", "$label: $message\n", FILE_APPEND);
 }
 
-class UploadError extends Exception {}
+class UploadError extends Exception
+{
+}
 
 $forbidden_extensions = ['phar', 'php', 'phtml', 'py', 'exe', 'dll', '.pl', '.rb', '.cgi'];
 
@@ -222,7 +218,7 @@ function process_file_upload(string $formid, string $workdir, array $allowed_ext
     global $av_scanner;
 
     // ensure callers always pass in a list of allowed extensions
-    if(empty($allowed_extensions)) {
+    if (empty($allowed_extensions)) {
         throw new UnexpectedValueException("List of allowed extensions must be included");
     }
 
@@ -230,7 +226,7 @@ function process_file_upload(string $formid, string $workdir, array $allowed_ext
 
     // begin a series of validation tests
     try {
-        if(!isset($_FILES[$formid]) || !$_FILES[$formid]["name"]) {
+        if (!isset($_FILES[$formid]) || !$_FILES[$formid]["name"]) {
             throw new UploadError("No file was uploaded");
         }
 
@@ -252,7 +248,7 @@ function process_file_upload(string $formid, string $workdir, array $allowed_ext
         $file_basename = pathinfo($file_name, PATHINFO_FILENAME);
         $file_basename = preg_replace("/\s+/", "_", $file_basename);
         $file_basename = preg_replace("/[^-_a-zA-Z0-9]/", "", $file_basename);
-        if(!$file_basename) {
+        if (!$file_basename) {
             throw new UploadError("Filename did not contain any valid characters");
         }
 
@@ -270,7 +266,7 @@ function process_file_upload(string $formid, string $workdir, array $allowed_ext
 
         // does it pass the anti-virus tests?
         if (file_exists($av_scanner)) {
-            $av_test_result = array();
+            $av_test_result = [];
             $av_retval = 0;
             $cmd = "$av_scanner " . escapeshellarg($file_tmp);
             exec($cmd, $av_test_result, $av_retval);
@@ -283,10 +279,10 @@ function process_file_upload(string $formid, string $workdir, array $allowed_ext
         }
 
         $final_filepath = "$workdir/$file_basename.$file_ext";
-        if(move_uploaded_file($file_tmp, $final_filepath) === false) {
+        if (move_uploaded_file($file_tmp, $final_filepath) === false) {
             throw new UploadError("Error moving uploaded file to working directory");
         }
-    } catch(Exception $e) {
+    } catch (Exception $e) {
         cleanup_on_error($workdir, $final_filepath);
         throw new UploadError("Error encountered uploading file: " . $e->getMessage());
     }
@@ -312,7 +308,8 @@ function validate_zip_contents(ZipArchive $opened_archive, string $workdir, stri
     }
 }
 
-function cleanup_on_error(string $workdir, ?string $target_name): void {
+function cleanup_on_error(string $workdir, ?string $target_name): void
+{
     // do a best-effort of cleaning this up -- the maint.php cron
     // will catch anything we miss
     if ($target_name && is_file($target_name)) {
@@ -332,8 +329,10 @@ function ensure_utf8_file(string $filename): bool
     if (strpos($ppf_output[0], "ISO-8859") !== false) {
         // Latin-1. convert to UTF-8
         $tmpfname = "$filename.tmp";
-        $cmd = sprintf("iconv -f ISO_8859-1 -t UTF-8 -o %s %s",
-            escapeshellarg($tmpfname), escapeshellarg($filename)
+        $cmd = sprintf(
+            "iconv -f ISO_8859-1 -t UTF-8 -o %s %s",
+            escapeshellarg($tmpfname),
+            escapeshellarg($filename)
         );
         exec($cmd, $ppf_output, $ppf_exitcode);
         rename($tmpfname, $filename);
@@ -349,8 +348,8 @@ function ensure_utf8_file(string $filename): bool
 function run_command(string $cmd, string|false &$stdout, string|false &$stderr): int
 {
     $proc = proc_open($cmd, [
-        1 => ['pipe','w'],
-        2 => ['pipe','w'],
+        1 => ['pipe', 'w'],
+        2 => ['pipe', 'w'],
     ], $pipes);
     $stdout = stream_get_contents($pipes[1]);
     fclose($pipes[1]);
