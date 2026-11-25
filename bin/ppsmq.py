@@ -129,19 +129,26 @@ class Ppsmq:
             # case specific
             self.wb[i] = re.sub(r"'em\b", r"’em", self.wb[i])
             # case irrelevant
-            words = [("'Tis", "’Tis"), ("'Tisn't", "’Tisn’t"), ("'Tweren't", "’Tweren’t"), ("'Twere", "’Twere"),
-                     ("'Twould", "’Twould"), ("'Twouldn't",
-                                              "’Twouldn’t"), ("'Twas", "’Twas"), ("'Im", "’Im"),
-                     ("'Twixt", "’Twixt"), ("'Til", "’Til"), ("'Scuse",
-                                                              "’Scuse"), ("'Gainst ", "’Gainst "),
-                     ("'Twon't", "’Twon’t")]
-            for w in words:
-                t1 = f"{w[0]}\\b"
-                t2 = re.sub("'", "’", w[0])
-                self.wb[i] = re.sub(t1, t2, self.wb[i])
-                t1 = t1.lower()
-                t2 = t2.lower()
-                self.wb[i] = re.sub(t1, t2, self.wb[i])
+            words = [
+                "'Tis",
+                "'Tisn't",
+                "'Tweren't",
+                "'Twere",
+                "'Twould",
+                "'Twouldn't",
+                "'Twas",
+                "'Im",
+                "'Twixt",
+                "'Til",
+                "'Scuse",
+                "'Gainst ",
+                "'Twon't",
+            ]
+            for word in words:
+                search, replace = f"{word}\\b", re.sub("'", "’", word)
+                self.wb[i] = re.sub(search, replace, self.wb[i])
+                search, replace = search.lower(), replace.lower()
+                self.wb[i] = re.sub(search, replace, self.wb[i])
 
     def singleQuotesByRule(self) -> None:
         rules = [
