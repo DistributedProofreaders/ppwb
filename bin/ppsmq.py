@@ -12,10 +12,10 @@ import sys
 
 
 class Ppsmq:
-    def __init__(self, args):
-        self.srcfile = args['infile']
-        self.outfile = args['outfile']
-        self.debug = args['debug']
+    def __init__(self, infile, outfile, debug):
+        self.infile = infile
+        self.outfile = outfile
+        self.debug = debug
         self.wb = []
         self.encoding = ""
         self.FLAG = "@"
@@ -170,7 +170,7 @@ class Ppsmq:
             self.wb[i] = re.sub(r"'”", r"’”", self.wb[i])
 
     def run(self):
-        self.loadFile(self.srcfile)
+        self.loadFile(self.infile)
         self.protectTags()
         self.doubleQuotes()
         self.checkDouble()
@@ -192,12 +192,11 @@ def parse_args():
     parser.add_argument('-o', '--outfile', help='output file', required=True)
     parser.add_argument(
         '-d', '--debug', help='debug (developer only)', action='store_true')
-    args = vars(parser.parse_args())
-    return args
+    return parser.parse_args()
 
 def main():
     args = parse_args()
-    ppsmq = Ppsmq(args)
+    ppsmq = Ppsmq(args.infile, args.outfile, args.debug)
     ppsmq.run()
 
 if __name__ == "__main__":
