@@ -127,11 +127,11 @@ class Ppsmq:
                 self.wb[i] += self.FLAG
                 self.flag_count += 1
             # close quote followed by word char
-            if re.search("”\w", self.wb[i]):
+            if re.search(r"”\w", self.wb[i]):
                 self.wb[i] += self.FLAG
                 self.flag_count += 1
             # open quote preceeded by word char
-            if re.search("\w“", self.wb[i]):
+            if re.search(r"\w“", self.wb[i]):
                 self.wb[i] += self.FLAG
                 self.flag_count += 1
             if re.search("“ ", self.wb[i]):  # floating open quote
