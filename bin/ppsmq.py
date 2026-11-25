@@ -66,8 +66,7 @@ class Ppsmq:
 
     # save working buffer to specified dstfile
     def saveFile(self, fn):
-        empty = re.compile("^$")
-        while empty.match(self.wb[-1]):
+        while self.wb[-1] == "":
             del self.wb[-1]
         with open(fn, "w", encoding="UTF-8") as f:
             f.write('\ufeff')  # BOM if UTF-8
@@ -91,12 +90,11 @@ class Ppsmq:
                 self.wb[i] = re.sub("(<[^>]*?)\"(.*?>)", r"\1∯\2", self.wb[i])
 
     def doubleQuotes(self):
-        empty = re.compile("^$")
         dqlevel = 0
         for i, line in enumerate(self.wb):
 
             # expect dqlevel == 0 on an empty line unless next line starts with open quote
-            if empty.match(line):
+            if line == "":
                 if dqlevel != 0 and ((i + 1) < len(self.wb)) and not self.wb[i+1].startswith('"'):
                     self.wb[i-1] += self.FLAG
                     self.flag_count += 1
