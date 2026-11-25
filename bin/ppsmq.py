@@ -10,8 +10,8 @@ import argparse
 import re
 import sys
 
-class Ppsmq(object):
 
+class Ppsmq:
     def __init__(self, args):
         self.srcfile = args['infile']
         self.outfile = args['outfile']
