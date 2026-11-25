@@ -25,8 +25,8 @@ class Ppsmq(object):
 
     # display (fatal) error and exit
     def fatal(self, message):
-        sys.stderr.write("fatal: " + message + "\n")
-        exit(1)
+        sys.stderr.write(f"fatal: {message}\n")
+        sys.exit(1)
 
     # load file from specified source file
     def loadFile(self, fn):
@@ -42,7 +42,7 @@ class Ppsmq(object):
             self.wb = wbuf.split("\n")
         except Exception as e:
             print(e)
-            self.fatal("loadFile: cannot open source file {}".format(fn))
+            self.fatal(f"loadFile: cannot open source file {fn}")
         self.wb = [s.rstrip() for s in self.wb]
         
         WRAP = False
@@ -83,9 +83,8 @@ class Ppsmq(object):
                     for line in t2:
                         self.wb[j] = line
                         j += 1
-        
-        for index, t in enumerate(self.wb):
-            f1.write("{:s}\r\n".format(t))
+        for t in self.wb:
+            f1.write(f"{t:s}\r\n")
         f1.close()
 
     def protectTags(self):
@@ -154,7 +153,7 @@ class Ppsmq(object):
                                                               "’Scuse"), ("'Gainst ", "’Gainst "),
                      ("'Twon't", "’Twon’t")]
             for x, w in enumerate(words):
-                t1 = "{}\\b".format(w[0])
+                t1 = f"{w[0]}\\b"
                 t2 = re.sub("'", "’", w[0])
                 self.wb[i] = re.sub(t1, t2, self.wb[i])
                 t1 = t1.lower()
@@ -186,7 +185,9 @@ class Ppsmq(object):
         self.saveFile(self.outfile)
         if self.flag_count > 0:
             print(
-                "{} unbalanced double-quotes marked with the '@' character".format(self.flag_count))
+                f"{self.flag_count} unbalanced double-quotes marked with the '@' character"
+            )
+
 
     def __str__(self):
         return "ppsmq"
