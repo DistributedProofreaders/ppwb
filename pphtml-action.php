@@ -16,7 +16,8 @@ log_tool_access("pphtml", $upid);
 
 $zipArchive = new ZipArchive();
 $result = $zipArchive->open($target_name);
-if ($result === TRUE) {
+if ($result === true) {
+    validate_zip_contents($zipArchive, $workdir, $target_name);
     $zipArchive->extractTo($workdir);
     $zipArchive->close();
 }

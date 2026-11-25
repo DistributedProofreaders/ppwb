@@ -107,11 +107,11 @@ or views the results file.</p>
 <table>
 <tr>
     <td style='text-align:right'><label for='userfile1'>file1:</label></td>
-    <td><input type="file" name="userfile1" id="userfile1"></td>
+    <td><input type="file" name="userfile1" id="userfile1" accept=".htm,.html,.txt"></td>
 </tr>
 <tr>
     <td style='text-align:right'><label for='userfile2'>file2:</label></td>
-    <td><input type="file" name="userfile2" id="userfile2"></td>
+    <td><input type="file" name="userfile2" id="userfile2" accept=".htm,.html,.txt"></td>
 </tr>
 </table>
 <div style='margin-top:1em; margin-bottom:0em;'><input type="submit" value="Submit" name="upload"></div>

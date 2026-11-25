@@ -81,11 +81,11 @@ Left click to view or right click the link to download the results.</p>
     <table>
       <tr>
           <td style='text-align:right'><label for='userfile'>User text file </label></td>
-          <td><input type="file" name="userfile" id="userfile"></td>
+          <td><input type="file" name="userfile" id="userfile" accept=".txt"></td>
       </tr>
       <tr>
           <td style='text-align:right'><label for='goodfile'>Good words file (optional)</label></td>
-          <td><input type="file" name="goodfile" id="goodfile"></td>
+          <td><input type="file" name="goodfile" id="goodfile" accept=".txt"></td>
       </tr>
     </table>
 

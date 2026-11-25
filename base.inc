@@ -204,75 +204,111 @@ function log_tool_action($workdir, $label, $message)
 
 class UploadError extends Exception {}
 
-function process_file_upload($formid, $workdir, $allowed_extensions=[])
+$forbidden_extensions = ['phar', 'php', 'phtml', 'py', 'exe', 'dll', '.pl', '.rb', '.cgi'];
+
+function process_file_upload(string $formid, string $workdir, array $allowed_extensions)
 {
+    global $forbidden_extensions;
     global $av_scanner;
 
-    if(!isset($_FILES[$formid]) || !$_FILES[$formid]["name"]) {
-        throw new UploadError("No file was uploaded");
+    // ensure callers always pass in a list of allowed extensions
+    if(empty($allowed_extensions)) {
+        throw new UnexpectedValueException("List of allowed extensions must be included");
     }
 
-    // get the information about the file
-    $file_name = $_FILES[$formid]['name'];
-    $file_size = $_FILES[$formid]['size'];
-    $file_tmp = $_FILES[$formid]['tmp_name'];
-    $file_type = $_FILES[$formid]['type'];
-
-    // lowercase the extension
-    $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-
-    // restrict basename to alphanumeric, -, or _ after replacing spaces
-    // with _
-    $file_basename = pathinfo($file_name, PATHINFO_FILENAME);
-    $file_basename = preg_replace("/\s+/", "_", $file_basename);
-    $file_basename = preg_replace("/[^-_a-zA-Z0-9]/", "", $file_basename);
-    if(!$file_basename) {
-        throw new UploadError("Filename did not contain any valid characters");
-    }
-
-    $final_filepath = "$workdir/$file_basename.$file_ext";
-    if(move_uploaded_file($file_tmp, $final_filepath) === FALSE) {
-        throw new UploadError("error moving uploaded file to working directory");
-    }
+    $final_filepath = null;
 
     // begin a series of validation tests
     try {
+        if(!isset($_FILES[$formid]) || !$_FILES[$formid]["name"]) {
+            throw new UploadError("No file was uploaded");
+        }
+
+        // get the information about the file
+        $file_name = $_FILES[$formid]['name'];
+        $file_size = $_FILES[$formid]['size'];
+        $file_tmp = $_FILES[$formid]['tmp_name'];
+
+        // lowercase the extension
+        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+        // was a non-zero sized file uploaded?
+        if ($file_size == 0) {
+            throw new UploadError("Empty file was uploaded");
+        }
+
+        // restrict basename to alphanumeric, -, or _ after replacing spaces
+        // with _
+        $file_basename = pathinfo($file_name, PATHINFO_FILENAME);
+        $file_basename = preg_replace("/\s+/", "_", $file_basename);
+        $file_basename = preg_replace("/[^-_a-zA-Z0-9]/", "", $file_basename);
+        if(!$file_basename) {
+            throw new UploadError("Filename did not contain any valid characters");
+        }
+
+        // do they claim it's an allowed type?
+        if (in_array($file_ext, $allowed_extensions, strict: true) === false) {
+            throw new UploadError(
+                sprintf("File must have a %s extension", join(" or ", $allowed_extensions))
+            );
+        }
+
+        // just in case a caller includes one of the forbidden extensions as allowed
+        if (in_array($file_ext, $forbidden_extensions, strict: true)) {
+            throw new UploadError("Disallowed file found in zip: $file_name");
+        }
+
         // does it pass the anti-virus tests?
         if (file_exists($av_scanner)) {
             $av_test_result = array();
             $av_retval = 0;
-            $cmd = "$av_scanner " . escapeshellarg($final_filepath);
+            $cmd = "$av_scanner " . escapeshellarg($file_tmp);
             exec($cmd, $av_test_result, $av_retval);
             if ($av_retval == 1) {
-                throw new UploadError("file rejected by AV scanner");
+                throw new UploadError("File rejected by AV scanner");
             }
             if ($av_retval != 0) {
-                throw new UploadError("error running AV scanner");
+                throw new UploadError("Error running AV scanner");
             }
         }
 
-        // was a file uploaded?
-        if ($_FILES[$formid]['size'] == 0) {
-            throw new UploadError("no file was uploaded");
-        }
-
-        // do they claim it's an allowed type?
-        if ($allowed_extensions && in_array($file_ext, $allowed_extensions) === false) {
-            throw new UploadError(
-                sprintf("file must have a %s extension", join(" or ", $allowed_extensions))
-            );
+        $final_filepath = "$workdir/$file_basename.$file_ext";
+        if(move_uploaded_file($file_tmp, $final_filepath) === false) {
+            throw new UploadError("Error moving uploaded file to working directory");
         }
     } catch(Exception $e) {
-        // do a best-effort of cleaning this up -- the maint.php cron
-        // will catch anything we miss
-        @unlink($final_filepath);
-        @rmdir($workdir);
-        throw $e;
+        cleanup_on_error($workdir, $final_filepath);
+        throw new UploadError("Error encountered uploading file: " . $e->getMessage());
     }
 
     log_tool_action($workdir, "uploaded file", $final_filepath);
 
     return $final_filepath;
+}
+
+function validate_zip_contents(ZipArchive $opened_archive, string $workdir, string $target_name): void
+{
+    global $forbidden_extensions;
+
+    for ($i = 0; $i < $opened_archive->numFiles; $i++) {
+        $fileName = $opened_archive->getNameIndex($i);
+
+        $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        if (in_array($ext, $forbidden_extensions)) {
+            $opened_archive->close();
+            cleanup_on_error($workdir, $target_name);
+            throw new UploadError("Disallowed file found in zip: $fileName");
+        }
+    }
+}
+
+function cleanup_on_error(string $workdir, ?string $target_name): void {
+    // do a best-effort of cleaning this up -- the maint.php cron
+    // will catch anything we miss
+    if ($target_name && is_file($target_name)) {
+        @unlink($target_name);
+    }
+    @rmdir($workdir);
 }
 
 // If a text file is ISO-8859 convert it to UTF-8
