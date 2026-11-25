@@ -31,16 +31,16 @@ class Ppsmq:
     # load file from specified source file
     def loadFile(self, fn):
         try:
-            wbuf = open(fn, "r", encoding='UTF-8').read()
-            self.encoding = "UTF-8"
-            # print("loaded UTF-8 file")##
-            self.wb = wbuf.split("\n")
+            with open(fn, "r", encoding='UTF-8') as f:
+                self.encoding = "UTF-8"
+                # print("loaded UTF-8 file")
+                self.wb = f.read().split("\n")
         except UnicodeDecodeError:
-            wbuf = open(fn, "r", encoding='Latin-1').read()
-            self.encoding = "Latin-1"
-            # print("loaded Latin-1 file")##
-            self.wb = wbuf.split("\n")
-        except Exception as e:
+            with open(fn, "r", encoding='Latin-1') as f:
+                self.encoding = "Latin-1"
+                # print("loaded Latin-1 file")
+                self.wb = f.read().split("\n")
+        except OSError as e:
             print(e)
             self.fatal(f"loadFile: cannot open source file {fn}")
         self.wb = [s.rstrip() for s in self.wb]
@@ -51,7 +51,7 @@ class Ppsmq:
             # so the line counter stays correct
             # for ppsmq, need to be able to restore the lines and indentation
             i = 0
-            while (i < len(self.wb)):
+            while i < len(self.wb):
                 try:
                     lbc = self.wb[i].count('<')
                     rbc = self.wb[i].count('>')
@@ -62,7 +62,7 @@ class Ppsmq:
                         lbc = self.wb[i].count('<')
                         rbc = self.wb[i].count('>')
                         consume += 1
-                except:
+                except IndexError:
                     pass
                 i += 1
 
@@ -71,21 +71,19 @@ class Ppsmq:
         empty = re.compile("^$")
         while empty.match(self.wb[-1]):
             del self.wb[-1]
-        f1 = open(fn, "w", encoding="UTF-8")
-        f1.write('\ufeff')  # BOM if UTF-8
+        with open(fn, "w", encoding="UTF-8") as f:
+            f.write('\ufeff')  # BOM if UTF-8
 
-        WRAP = False
-        if WRAP:
-            for index, t in enumerate(self.wb):
-                if '⦻' in t:
-                    t2 = t.split('⦻')
-                    j = index
-                    for line in t2:
-                        self.wb[j] = line
-                        j += 1
-        for t in self.wb:
-            f1.write(f"{t:s}\r\n")
-        f1.close()
+            WRAP = False
+            if WRAP:
+                for index, t in enumerate(self.wb):
+                    if '⦻' in t:
+                        t2 = t.split('⦻')
+                        j = index
+                        for line in t2:
+                            self.wb[j] = line
+                            j += 1
+            f.write("".join(f"{t:s}\r\n" for t in self.wb))
 
     def protectTags(self):
         for i, _ in enumerate(self.wb):
