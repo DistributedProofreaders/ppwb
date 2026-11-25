@@ -44,7 +44,7 @@ class Ppsmq:
             print(e)
             self.fatal(f"loadFile: cannot open source file {fn}")
         self.wb = [s.rstrip() for s in self.wb]
-        
+
         WRAP = False
         if WRAP:
             # if any tags span two or more lines, unwrap them and leave blank lines
@@ -64,7 +64,7 @@ class Ppsmq:
                         consume += 1
                 except:
                     pass
-                i += 1       
+                i += 1
 
     # save working buffer to specified dstfile
     def saveFile(self, fn):
@@ -73,9 +73,9 @@ class Ppsmq:
             del self.wb[-1]
         f1 = open(fn, "w", encoding="UTF-8")
         f1.write('\ufeff')  # BOM if UTF-8
-        
+
         WRAP = False
-        if WRAP:        
+        if WRAP:
             for index, t in enumerate(self.wb):
                 if '⦻' in t:
                     t2 = t.split('⦻')
