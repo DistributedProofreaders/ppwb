@@ -20,8 +20,6 @@ class Ppsmq:
         self.encoding = ""
         self.FLAG = "@"
         self.flag_count = 0
-        self.VERSION = "2019.10.04"
-        self.root = os.path.dirname(os.path.realpath(__file__))
 
     # display (fatal) error and exit
     def fatal(self, message):
