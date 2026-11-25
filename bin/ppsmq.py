@@ -12,10 +12,11 @@ import sys
 
 
 class Ppsmq:
-    def __init__(self, infile: str, outfile: str, debug: bool) -> None:
+    def __init__(self, infile: str, outfile: str, debug: bool, wrap: bool) -> None:
         self.infile = infile
         self.outfile = outfile
         self.debug = debug
+        self.wrap = wrap
         self.wb = []
         self.encoding = ""
         self.FLAG = "@"
@@ -43,8 +44,7 @@ class Ppsmq:
             self.fatal(f"loadFile: cannot open source file {infile}")
         self.wb = [s.rstrip() for s in self.wb]
 
-        WRAP = False
-        if WRAP:
+        if self.wrap:
             # if any tags span two or more lines, unwrap them and leave blank lines
             # so the line counter stays correct
             # for ppsmq, need to be able to restore the lines and indentation
@@ -68,9 +68,7 @@ class Ppsmq:
             del self.wb[-1]
         with open(outfile, "w", encoding="UTF-8") as f:
             f.write('\ufeff')  # BOM if UTF-8
-
-            WRAP = False
-            if WRAP:
+            if self.wrap:
                 for index, t in enumerate(self.wb):
                     if '⦻' in t:
                         t2 = t.split('⦻')
@@ -184,8 +182,11 @@ def main() -> None:
     parser.add_argument(
         "-d", "--debug", help="debug (developer only)", action="store_true"
     )
+    parser.add_argument(
+        "-w", "--wrap", help="join tags spanning multiple lines", action="store_true"
+    )
     args = parser.parse_args()
-    Ppsmq(args.infile, args.outfile, args.debug).run()
+    Ppsmq(args.infile, args.outfile, args.debug, args.wrap).run()
 
 
 if __name__ == "__main__":
