@@ -36,3 +36,21 @@ jobs:
           php-version: '8.3'
       - name: Run PHPStan
         run: ./vendor/bin/phpstan --no-ansi --no-progress --memory-limit=512M
+  python-linting:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v9.0.0
+      - name: ruff lint
+        working-directory: ./bin
+        run: uv run ruff check --output-format=github
+      - name: ruff formatting
+        working-directory: ./bin
+        run: uv run ruff format --check
+      - name: ty type check
+        working-directory: ./bin
+        run: uv run ty check --output-format=github
