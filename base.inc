@@ -200,7 +200,7 @@ function log_tool_access(string $tool, string $upid): void
     file_put_contents("$base_workdir/access.log", $s, FILE_APPEND);
 }
 
-function log_tool_action(string $workdir, string $label, string $message): void
+function log_tool_action(string $workdir, string $label, mixed $message): void
 {
     file_put_contents("$workdir/messages.log", "$label: $message\n", FILE_APPEND);
 }
