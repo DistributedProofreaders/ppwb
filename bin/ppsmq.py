@@ -12,7 +12,7 @@ import sys
 
 
 class Ppsmq:
-    def __init__(self, infile, outfile, debug):
+    def __init__(self, infile: str, outfile: str, debug: bool) -> None:
         self.infile = infile
         self.outfile = outfile
         self.debug = debug
@@ -21,26 +21,26 @@ class Ppsmq:
         self.FLAG = "@"
         self.flag_count = 0
 
-    # display (fatal) error and exit
-    def fatal(self, message):
+    def fatal(self, message: str) -> None:
+        """display (fatal) error and exit"""
         sys.stderr.write(f"fatal: {message}\n")
         sys.exit(1)
 
-    # load file from specified source file
-    def loadFile(self, fn):
+    def loadFile(self, infile: str) -> None:
+        """load file from specified source file"""
         try:
-            with open(fn, "r", encoding='UTF-8') as f:
+            with open(infile, "r", encoding='UTF-8') as f:
                 self.encoding = "UTF-8"
                 # print("loaded UTF-8 file")
                 self.wb = f.read().split("\n")
         except UnicodeDecodeError:
-            with open(fn, "r", encoding='Latin-1') as f:
+            with open(infile, "r", encoding='Latin-1') as f:
                 self.encoding = "Latin-1"
                 # print("loaded Latin-1 file")
                 self.wb = f.read().split("\n")
         except OSError as e:
             print(e)
-            self.fatal(f"loadFile: cannot open source file {fn}")
+            self.fatal(f"loadFile: cannot open source file {infile}")
         self.wb = [s.rstrip() for s in self.wb]
 
         WRAP = False
@@ -64,11 +64,11 @@ class Ppsmq:
                     pass
                 i += 1
 
-    # save working buffer to specified dstfile
-    def saveFile(self, fn):
+    def saveFile(self, outfile: str) -> None:
+        """save working buffer to specified outfile"""
         while self.wb[-1] == "":
             del self.wb[-1]
-        with open(fn, "w", encoding="UTF-8") as f:
+        with open(outfile, "w", encoding="UTF-8") as f:
             f.write('\ufeff')  # BOM if UTF-8
 
             WRAP = False
@@ -82,14 +82,14 @@ class Ppsmq:
                             j += 1
             f.write("".join(f"{t:s}\r\n" for t in self.wb))
 
-    def protectTags(self):
+    def protectTags(self) -> None:
         for i, _ in enumerate(self.wb):
             while re.search("<[^>]*?'.*?>", self.wb[i]):
                 self.wb[i] = re.sub("(<[^>]*?)'(.*?>)", r"\1∮\2", self.wb[i])
             while re.search("<[^>]*?\".*?>", self.wb[i]):
                 self.wb[i] = re.sub("(<[^>]*?)\"(.*?>)", r"\1∯\2", self.wb[i])
 
-    def doubleQuotes(self):
+    def doubleQuotes(self) -> None:
         dqlevel = 0
         for i, line in enumerate(self.wb):
 
@@ -112,7 +112,7 @@ class Ppsmq:
                     dqlevel -= 1
                     continue
 
-    def checkDouble(self):
+    def checkDouble(self) -> None:
         for i, line in enumerate(self.wb):
             if re.match("^”", self.wb[i]):  # wrong quote start of line
                 self.wb[i] += self.FLAG
@@ -135,7 +135,7 @@ class Ppsmq:
                 self.wb[i] += self.FLAG
                 self.flag_count += 1
 
-    def singleQuotesByList(self):
+    def singleQuotesByList(self) -> None:
         for i, _ in enumerate(self.wb):
             # case specific
             self.wb[i] = re.sub(r"'em\b", r"’em", self.wb[i])
@@ -154,7 +154,7 @@ class Ppsmq:
                 t2 = t2.lower()
                 self.wb[i] = re.sub(t1, t2, self.wb[i])
 
-    def singleQuotesByRule(self):
+    def singleQuotesByRule(self) -> None:
         for i, line in enumerate(self.wb):
             # letter-'-letter
             self.wb[i] = re.sub(r"(\w)'(\w)", r"\1’\2", self.wb[i])
@@ -169,7 +169,7 @@ class Ppsmq:
             # followed by a double quote
             self.wb[i] = re.sub(r"'”", r"’”", self.wb[i])
 
-    def run(self):
+    def run(self) -> None:
         self.loadFile(self.infile)
         self.protectTags()
         self.doubleQuotes()
@@ -183,21 +183,16 @@ class Ppsmq:
             )
 
 
-    def __str__(self):
-        return "ppsmq"
-
-def parse_args():
+def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--infile', help='input file', required=True)
-    parser.add_argument('-o', '--outfile', help='output file', required=True)
+    parser.add_argument("-i", "--infile", help="input file", required=True)
+    parser.add_argument("-o", "--outfile", help="output file", required=True)
     parser.add_argument(
-        '-d', '--debug', help='debug (developer only)', action='store_true')
-    return parser.parse_args()
+        "-d", "--debug", help="debug (developer only)", action="store_true"
+    )
+    args = parser.parse_args()
+    Ppsmq(args.infile, args.outfile, args.debug).run()
 
-def main():
-    args = parse_args()
-    ppsmq = Ppsmq(args.infile, args.outfile, args.debug)
-    ppsmq.run()
 
 if __name__ == "__main__":
     sys.exit(main())
