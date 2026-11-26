@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-  ppsmq.py
-  MIT license (c) 2018 Asylum Computer Services LLC
+ppsmq.py
+MIT license (c) 2018 Asylum Computer Services LLC
 """
 
 import argparse
@@ -50,14 +50,14 @@ class Ppsmq:
             # for ppsmq, need to be able to restore the lines and indentation
             for i in range(len(self.wb)):
                 try:
-                    lbc = self.wb[i].count('<')
-                    rbc = self.wb[i].count('>')
+                    lbc = self.wb[i].count("<")
+                    rbc = self.wb[i].count(">")
                     consume = 1
                     while lbc != rbc:
-                        self.wb[i] = self.wb[i]+"⦻"+self.wb[i+consume]
-                        self.wb[i+consume] = ""
-                        lbc = self.wb[i].count('<')
-                        rbc = self.wb[i].count('>')
+                        self.wb[i] = self.wb[i] + "⦻" + self.wb[i + consume]
+                        self.wb[i + consume] = ""
+                        lbc = self.wb[i].count("<")
+                        rbc = self.wb[i].count(">")
                         consume += 1
                 except IndexError:
                     pass
@@ -67,11 +67,11 @@ class Ppsmq:
         while self.wb[-1] == "":
             del self.wb[-1]
         with open(outfile, "w", encoding="UTF-8") as f:
-            f.write('\ufeff')  # BOM if UTF-8
+            f.write("\ufeff")  # BOM if UTF-8
             if self.wrap:
                 for index, t in enumerate(self.wb):
-                    if '⦻' in t:
-                        t2 = t.split('⦻')
+                    if "⦻" in t:
+                        t2 = t.split("⦻")
                         j = index
                         for line in t2:
                             self.wb[j] = line
@@ -82,16 +82,20 @@ class Ppsmq:
         for i in range(len(self.wb)):
             while re.search("<[^>]*?'.*?>", self.wb[i]):
                 self.wb[i] = re.sub("(<[^>]*?)'(.*?>)", r"\1∮\2", self.wb[i])
-            while re.search("<[^>]*?\".*?>", self.wb[i]):
-                self.wb[i] = re.sub("(<[^>]*?)\"(.*?>)", r"\1∯\2", self.wb[i])
+            while re.search('<[^>]*?".*?>', self.wb[i]):
+                self.wb[i] = re.sub('(<[^>]*?)"(.*?>)', r"\1∯\2", self.wb[i])
 
     def doubleQuotes(self) -> None:
         dqlevel = 0
         for i in range(len(self.wb)):
             # expect dqlevel == 0 on an empty line unless next line starts with open quote
             if self.wb[i] == "":
-                if dqlevel != 0 and ((i + 1) < len(self.wb)) and not self.wb[i+1].startswith('"'):
-                    self.wb[i-1] += self.FLAG
+                if (
+                    dqlevel != 0
+                    and (i + 1) < len(self.wb)
+                    and not self.wb[i + 1].startswith('"')
+                ):
+                    self.wb[i - 1] += self.FLAG
                     self.flag_count += 1
                 dqlevel = 0
                 continue
