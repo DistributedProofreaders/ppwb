@@ -30,12 +30,12 @@ class Ppsmq:
     def loadFile(self, infile: str) -> None:
         """load file from specified source file"""
         try:
-            with open(infile, "r", encoding='UTF-8') as f:
+            with open(infile, encoding="UTF-8") as f:
                 self.encoding = "UTF-8"
                 # print("loaded UTF-8 file")
                 self.wb = f.read().split("\n")
         except UnicodeDecodeError:
-            with open(infile, "r", encoding='Latin-1') as f:
+            with open(infile, encoding="Latin-1") as f:
                 self.encoding = "Latin-1"
                 # print("loaded Latin-1 file")
                 self.wb = f.read().split("\n")
