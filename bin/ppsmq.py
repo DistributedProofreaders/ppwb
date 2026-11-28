@@ -2,111 +2,110 @@
 # -*- coding: utf-8 -*-
 
 """
-  ppsmq.py
-  MIT license (c) 2018 Asylum Computer Services LLC
+ppsmq.py.
+
+MIT license (c) 2018 Asylum Computer Services LLC.
 """
 
 import argparse
 import re
 import sys
-import string
-import os
-import codecs
 
-class Ppsmq(object):
 
-    def __init__(self, args):
-        self.srcfile = args['infile']
-        self.outfile = args['outfile']
-        self.debug = args['debug']
+class Ppsmq:
+    """Post-processing smart-quote processor."""
+
+    def __init__(self, infile: str, outfile: str, debug: bool, wrap: bool) -> None:
+        """Initialize class."""
+        self.infile = infile
+        self.outfile = outfile
+        self.debug = debug
+        self.wrap = wrap
         self.wb = []
         self.encoding = ""
         self.FLAG = "@"
         self.flag_count = 0
-        self.VERSION = "2019.10.04"
-        self.root = os.path.dirname(os.path.realpath(__file__))
 
-    # display (fatal) error and exit
-    def fatal(self, message):
-        sys.stderr.write("fatal: " + message + "\n")
-        exit(1)
+    def fatal(self, message: str) -> None:
+        """Display (fatal) error and exit."""
+        sys.stderr.write(f"fatal: {message}\n")
+        sys.exit(1)
 
-    # load file from specified source file
-    def loadFile(self, fn):
+    def load(self, infile: str) -> None:
+        """Load file from specified source file."""
         try:
-            wbuf = open(fn, "r", encoding='UTF-8').read()
-            self.encoding = "UTF-8"
-            # print("loaded UTF-8 file")##
-            self.wb = wbuf.split("\n")
+            with open(infile, encoding="UTF-8") as f:
+                self.encoding = "UTF-8"
+                # print("loaded UTF-8 file")
+                self.wb = f.read().split("\n")
         except UnicodeDecodeError:
-            wbuf = open(fn, "r", encoding='Latin-1').read()
-            self.encoding = "Latin-1"
-            # print("loaded Latin-1 file")##
-            self.wb = wbuf.split("\n")
-        except Exception as e:
+            with open(infile, encoding="Latin-1") as f:
+                self.encoding = "Latin-1"
+                # print("loaded Latin-1 file")
+                self.wb = f.read().split("\n")
+        except OSError as e:
             print(e)
-            self.fatal("loadFile: cannot open source file {}".format(fn))
+            self.fatal(f"load: cannot open source file {infile}")
         self.wb = [s.rstrip() for s in self.wb]
-        
-        WRAP = False
-        if WRAP:
+
+        if self.wrap:
             # if any tags span two or more lines, unwrap them and leave blank lines
             # so the line counter stays correct
             # for ppsmq, need to be able to restore the lines and indentation
-            i = 0
-            while (i < len(self.wb)):
+            for i in range(len(self.wb)):
                 try:
-                    lbc = self.wb[i].count('<')
-                    rbc = self.wb[i].count('>')
+                    lbc = self.wb[i].count("<")
+                    rbc = self.wb[i].count(">")
                     consume = 1
                     while lbc != rbc:
-                        self.wb[i] = self.wb[i]+"⦻"+self.wb[i+consume]
-                        self.wb[i+consume] = ""
-                        lbc = self.wb[i].count('<')
-                        rbc = self.wb[i].count('>')
+                        self.wb[i] = self.wb[i] + "⦻" + self.wb[i + consume]
+                        self.wb[i + consume] = ""
+                        lbc = self.wb[i].count("<")
+                        rbc = self.wb[i].count(">")
                         consume += 1
-                except:
+                except IndexError:
                     pass
-                i += 1       
 
-    # save working buffer to specified dstfile
-    def saveFile(self, fn):
-        empty = re.compile("^$")
-        while empty.match(self.wb[-1]):
+    def save(self, outfile: str) -> None:
+        """Save working buffer to specified outfile."""
+        while self.wb[-1] == "":
             del self.wb[-1]
-        f1 = open(fn, "w", encoding="UTF-8")
-        f1.write('\ufeff')  # BOM if UTF-8
-        
-        WRAP = False
-        if WRAP:        
-            for index, t in enumerate(self.wb):
-                if '⦻' in t:
-                    t2 = t.split('⦻')
-                    j = index
-                    for line in t2:
-                        self.wb[j] = line
-                        j += 1
-        
-        for index, t in enumerate(self.wb):
-            f1.write("{:s}\r\n".format(t))
-        f1.close()
+        with open(outfile, "w", encoding="UTF-8") as f:
+            f.write("\ufeff")  # BOM if UTF-8
+            if self.wrap:
+                for index, t in enumerate(self.wb):
+                    if "⦻" in t:
+                        t2 = t.split("⦻")
+                        j = index
+                        for line in t2:
+                            self.wb[j] = line
+                            j += 1
+            f.write("".join(f"{t:s}\r\n" for t in self.wb))
 
-    def protectTags(self):
-        for i, _ in enumerate(self.wb):
+    def protect_tags(self) -> None:
+        """
+        Turn quotes in HTML tag attributes into the special ∮ character.
+
+        This avoids them being mangled by quote fixing transforms.
+        """
+        for i in range(len(self.wb)):
             while re.search("<[^>]*?'.*?>", self.wb[i]):
                 self.wb[i] = re.sub("(<[^>]*?)'(.*?>)", r"\1∮\2", self.wb[i])
-            while re.search("<[^>]*?\".*?>", self.wb[i]):
-                self.wb[i] = re.sub("(<[^>]*?)\"(.*?>)", r"\1∯\2", self.wb[i])
+            while re.search('<[^>]*?".*?>', self.wb[i]):
+                self.wb[i] = re.sub('(<[^>]*?)"(.*?>)', r"\1∯\2", self.wb[i])
 
-    def doubleQuotes(self):
-        empty = re.compile("^$")
+    def curl_double_quotes(self) -> None:
+        """Turn straight double quotes into open/close curly quotes."""
         dqlevel = 0
-        for i, line in enumerate(self.wb):
-
+        for i in range(len(self.wb)):
             # expect dqlevel == 0 on an empty line unless next line starts with open quote
-            if empty.match(line):
-                if dqlevel != 0 and ((i + 1) < len(self.wb)) and not self.wb[i+1].startswith('"'):
-                    self.wb[i-1] += self.FLAG
+            if self.wb[i] == "":
+                if (
+                    dqlevel != 0
+                    and (i + 1) < len(self.wb)
+                    and not self.wb[i + 1].startswith('"')
+                ):
+                    self.wb[i - 1] += self.FLAG
                     self.flag_count += 1
                 dqlevel = 0
                 continue
@@ -114,99 +113,100 @@ class Ppsmq(object):
             # replace straight with curly quotes
             while re.search('"', self.wb[i]):
                 if dqlevel == 0:
-                    self.wb[i] = re.sub('"', '“', self.wb[i], 1)
+                    self.wb[i] = re.sub('"', "“", self.wb[i], 1)
                     dqlevel += 1
                     continue
                 if dqlevel == 1:
-                    self.wb[i] = re.sub('"', '”', self.wb[i], 1)
+                    self.wb[i] = re.sub('"', "”", self.wb[i], 1)
                     dqlevel -= 1
                     continue
 
-    def checkDouble(self):
-        for i, line in enumerate(self.wb):
-            if re.match("^”", self.wb[i]):  # wrong quote start of line
-                self.wb[i] += self.FLAG
-                self.flag_count += 1
-            if re.search("“$", self.wb[i]):  # wrong quote end of line
-                self.wb[i] += self.FLAG
-                self.flag_count += 1
-            # close quote followed by word char
-            if re.search("”\w", self.wb[i]):
-                self.wb[i] += self.FLAG
-                self.flag_count += 1
-            # open quote preceeded by word char
-            if re.search("\w“", self.wb[i]):
-                self.wb[i] += self.FLAG
-                self.flag_count += 1
-            if re.search("“ ", self.wb[i]):  # floating open quote
-                self.wb[i] += self.FLAG
-                self.flag_count += 1
-            if re.search(" ”", self.wb[i]):  # floating close quote
-                self.wb[i] += self.FLAG
-                self.flag_count += 1
+    def flag_mismatched_curly_double(self) -> None:
+        """Flag seemingly mismatched curly double quotes for review."""
+        rules = [
+            "^”",  # close quote at start of line
+            "“$",  # open quote at end of line
+            r"”\w",  # close quote followed by word char
+            r"\w“",  # open quote preceeded by word char
+            "“ ",  # floating open quote
+            " ”",  # floating close quote
+        ]
+        for i in range(len(self.wb)):
+            for rule in rules:
+                if re.search(rule, self.wb[i]):
+                    self.wb[i] += self.FLAG
+                    self.flag_count += 1
 
-    def singleQuotesByList(self):
-        for i, _ in enumerate(self.wb):
+    def curl_single_quotes_by_list(self) -> None:
+        """Search and replace list of straight quote words with curly quotes."""
+        for i in range(len(self.wb)):
             # case specific
             self.wb[i] = re.sub(r"'em\b", r"’em", self.wb[i])
             # case irrelevant
-            words = [("'Tis", "’Tis"), ("'Tisn't", "’Tisn’t"), ("'Tweren't", "’Tweren’t"), ("'Twere", "’Twere"),
-                     ("'Twould", "’Twould"), ("'Twouldn't",
-                                              "’Twouldn’t"), ("'Twas", "’Twas"), ("'Im", "’Im"),
-                     ("'Twixt", "’Twixt"), ("'Til", "’Til"), ("'Scuse",
-                                                              "’Scuse"), ("'Gainst ", "’Gainst "),
-                     ("'Twon't", "’Twon’t")]
-            for x, w in enumerate(words):
-                t1 = "{}\\b".format(w[0])
-                t2 = re.sub("'", "’", w[0])
-                self.wb[i] = re.sub(t1, t2, self.wb[i])
-                t1 = t1.lower()
-                t2 = t2.lower()
-                self.wb[i] = re.sub(t1, t2, self.wb[i])
+            words = [
+                "'Tis",
+                "'Tisn't",
+                "'Tweren't",
+                "'Twere",
+                "'Twould",
+                "'Twouldn't",
+                "'Twas",
+                "'Im",
+                "'Twixt",
+                "'Til",
+                "'Scuse",
+                "'Gainst ",
+                "'Twon't",
+            ]
+            for word in words:
+                search, replace = f"{word}\\b", re.sub("'", "’", word)
+                self.wb[i] = re.sub(search, replace, self.wb[i])
+                search, replace = search.lower(), replace.lower()
+                self.wb[i] = re.sub(search, replace, self.wb[i])
 
-    def singleQuotesByRule(self):
-        for i, line in enumerate(self.wb):
-            # letter-'-letter
-            self.wb[i] = re.sub(r"(\w)'(\w)", r"\1’\2", self.wb[i])
-            # period, comma or letter followed by '
-            self.wb[i] = re.sub(r"([\.,\w])'", r"\1’", self.wb[i])
-            # letter-apostrophe-period
-            self.wb[i] = re.sub(r"(\w)'\.", r"\1’\.", self.wb[i])
-            # at end of line
-            self.wb[i] = re.sub(r"'$", r"’", self.wb[i])
-            # followed by a space
-            self.wb[i] = re.sub(r"' ", r"’ ", self.wb[i])
-            # followed by a double quote
-            self.wb[i] = re.sub(r"'”", r"’”", self.wb[i])
+    def curl_single_quotes_by_regex(self) -> None:
+        """Replace straight single quotes as apostrophes with curly quote equivalent."""
+        rules = [
+            (r"(\w)'(\w)", r"\1’\2"),  # letter-'-letter
+            (r"([\.,\w])'", r"\1’"),  # period, comma or letter followed by '
+            (r"(\w)'\.", r"\1’\."),  # letter-apostrophe-period
+            (r"'$", r"’"),  # at end of line
+            (r"' ", r"’ "),  # followed by a space
+            (r"'”", r"’”"),  # followed by a double quote
+        ]
+        for i in range(len(self.wb)):
+            for search, replace in rules:
+                self.wb[i] = re.sub(search, replace, self.wb[i])
 
-    def run(self):
-        self.loadFile(self.srcfile)
-        self.protectTags()
-        self.doubleQuotes()
-        self.checkDouble()
-        self.singleQuotesByList()
-        self.singleQuotesByRule()
-        self.saveFile(self.outfile)
+    def run(self) -> None:
+        """Load, process, and save the text."""
+        self.load(self.infile)
+        self.protect_tags()
+        self.curl_double_quotes()
+        self.flag_mismatched_curly_double()
+        self.curl_single_quotes_by_list()
+        self.curl_single_quotes_by_regex()
+        self.save(self.outfile)
         if self.flag_count > 0:
             print(
-                "{} unbalanced double-quotes marked with the '@' character".format(self.flag_count))
+                f"{self.flag_count} unbalanced double-quotes marked with the '@' character"
+            )
 
-    def __str__(self):
-        return "ppsmq"
 
-def parse_args():
+def main() -> None:
+    """Entry point when run from CLI."""
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--infile', help='input file', required=True)
-    parser.add_argument('-o', '--outfile', help='output file', required=True)
+    parser.add_argument("-i", "--infile", help="input file", required=True)
+    parser.add_argument("-o", "--outfile", help="output file", required=True)
     parser.add_argument(
-        '-d', '--debug', help='debug (developer only)', action='store_true')
-    args = vars(parser.parse_args())
-    return args
+        "-d", "--debug", help="debug (developer only)", action="store_true"
+    )
+    parser.add_argument(
+        "-w", "--wrap", help="join tags spanning multiple lines", action="store_true"
+    )
+    args = parser.parse_args()
+    Ppsmq(args.infile, args.outfile, args.debug, args.wrap).run()
 
-def main():
-    args = parse_args()
-    ppsmq = Ppsmq(args)
-    ppsmq.run()
 
 if __name__ == "__main__":
     sys.exit(main())
