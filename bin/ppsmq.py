@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-ppsmq.py
-MIT license (c) 2018 Asylum Computer Services LLC
+ppsmq.py.
+
+MIT license (c) 2018 Asylum Computer Services LLC.
 """
 
 import argparse
@@ -12,7 +13,10 @@ import sys
 
 
 class Ppsmq:
+    """Post-processing smart-quote processor."""
+
     def __init__(self, infile: str, outfile: str, debug: bool, wrap: bool) -> None:
+        """Initialize class."""
         self.infile = infile
         self.outfile = outfile
         self.debug = debug
@@ -27,8 +31,8 @@ class Ppsmq:
         sys.stderr.write(f"fatal: {message}\n")
         sys.exit(1)
 
-    def loadFile(self, infile: str) -> None:
-        """load file from specified source file"""
+    def load(self, infile: str) -> None:
+        """Load file from specified source file."""
         try:
             with open(infile, encoding="UTF-8") as f:
                 self.encoding = "UTF-8"
@@ -41,7 +45,7 @@ class Ppsmq:
                 self.wb = f.read().split("\n")
         except OSError as e:
             print(e)
-            self.fatal(f"loadFile: cannot open source file {infile}")
+            self.fatal(f"load: cannot open source file {infile}")
         self.wb = [s.rstrip() for s in self.wb]
 
         if self.wrap:
@@ -62,7 +66,7 @@ class Ppsmq:
                 except IndexError:
                     pass
 
-    def saveFile(self, outfile: str) -> None:
+    def save(self, outfile: str) -> None:
         """Save working buffer to specified outfile."""
         while self.wb[-1] == "":
             del self.wb[-1]
@@ -78,14 +82,20 @@ class Ppsmq:
                             j += 1
             f.write("".join(f"{t:s}\r\n" for t in self.wb))
 
-    def protectTags(self) -> None:
+    def protect_tags(self) -> None:
+        """
+        Turn quotes in HTML tag attributes into the special ∮ character.
+
+        This avoids them being mangled by quote fixing transforms.
+        """
         for i in range(len(self.wb)):
             while re.search("<[^>]*?'.*?>", self.wb[i]):
                 self.wb[i] = re.sub("(<[^>]*?)'(.*?>)", r"\1∮\2", self.wb[i])
             while re.search('<[^>]*?".*?>', self.wb[i]):
                 self.wb[i] = re.sub('(<[^>]*?)"(.*?>)', r"\1∯\2", self.wb[i])
 
-    def doubleQuotes(self) -> None:
+    def curl_double_quotes(self) -> None:
+        """Turn straight double quotes into open/close curly quotes."""
         dqlevel = 0
         for i in range(len(self.wb)):
             # expect dqlevel == 0 on an empty line unless next line starts with open quote
@@ -111,7 +121,8 @@ class Ppsmq:
                     dqlevel -= 1
                     continue
 
-    def checkDouble(self) -> None:
+    def flag_mismatched_curly_double(self) -> None:
+        """Flag seemingly mismatched curly double quotes for review."""
         rules = [
             "^”",  # close quote at start of line
             "“$",  # open quote at end of line
@@ -126,7 +137,8 @@ class Ppsmq:
                     self.wb[i] += self.FLAG
                     self.flag_count += 1
 
-    def singleQuotesByList(self) -> None:
+    def curl_single_quotes_by_list(self) -> None:
+        """Search and replace list of straight quote words with curly quotes."""
         for i in range(len(self.wb)):
             # case specific
             self.wb[i] = re.sub(r"'em\b", r"’em", self.wb[i])
@@ -152,7 +164,8 @@ class Ppsmq:
                 search, replace = search.lower(), replace.lower()
                 self.wb[i] = re.sub(search, replace, self.wb[i])
 
-    def singleQuotesByRule(self) -> None:
+    def curl_single_quotes_by_regex(self) -> None:
+        """Replace straight single quotes as apostrophes with curly quote equivalent."""
         rules = [
             (r"(\w)'(\w)", r"\1’\2"),  # letter-'-letter
             (r"([\.,\w])'", r"\1’"),  # period, comma or letter followed by '
@@ -166,13 +179,14 @@ class Ppsmq:
                 self.wb[i] = re.sub(search, replace, self.wb[i])
 
     def run(self) -> None:
-        self.loadFile(self.infile)
-        self.protectTags()
-        self.doubleQuotes()
-        self.checkDouble()
-        self.singleQuotesByList()
-        self.singleQuotesByRule()
-        self.saveFile(self.outfile)
+        """Load, process, and save the text."""
+        self.load(self.infile)
+        self.protect_tags()
+        self.curl_double_quotes()
+        self.flag_mismatched_curly_double()
+        self.curl_single_quotes_by_list()
+        self.curl_single_quotes_by_regex()
+        self.save(self.outfile)
         if self.flag_count > 0:
             print(
                 f"{self.flag_count} unbalanced double-quotes marked with the '@' character"
@@ -180,6 +194,7 @@ class Ppsmq:
 
 
 def main() -> None:
+    """Entry point when run from CLI."""
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--infile", help="input file", required=True)
     parser.add_argument("-o", "--outfile", help="output file", required=True)
